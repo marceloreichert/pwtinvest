@@ -190,6 +190,7 @@ DEPENDENCIES
   rails (= 4.1.5)
   rails-observers
   rails_12factor
+  rake
   rspec-collection_matchers
   rspec-rails
   sass-rails (= 4.0.3)

@@ -29,6 +29,7 @@ group :development, :test do
   gem 'awesome_print', :require => false
   gem 'pry', :require => false
   gem 'thin'
+  gem 'rake'
 end
 
 group :development, :test do
