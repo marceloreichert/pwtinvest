@@ -8,6 +8,6 @@ deploy:
   provider: heroku
   api_key:
     secure: haUBMOAscXAx4cVaDqJ7IHw2XZDKteJImb+aeB2jN82aUPeCDgnAu7ssr7mVFVQ8HsZROHHVjrLkdq0f8P+c/K8ZELDLMSg0Sfg8lhgoRvwRtKh/pp498NkQreJ1NrfjDMhw6+9xzx18T9oRT9+T6IKoxoGtc7ebJ/Zf07uV/5M=
-  app: pwtinvest
+  app: pwt-pwtinvest
   on:
     repo: marceloreichert/pwtinvest
