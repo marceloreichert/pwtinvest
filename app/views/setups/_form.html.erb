@@ -1,0 +1,62 @@
+<%= simple_form_for(@setup) do |f| %>
+  <% if @setup.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@setup.errors.count, "error") %> prohibited this candle from being saved:</h2>
+
+      <ul>
+      <% @setup.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="inputs">
+		<div class='section'>
+		  <table width="500" cellpadding="0" cellspacing="5">
+					<tr>
+			      <td valign="top">
+			        <%= f.input :setup, :label => 'Nome do Padrão: ' %>
+						</td>
+					</tr>
+					<tr>
+			      <td valign="top">
+			        <%= f.input :description, :label => 'Descrição do padrao: ' %>
+						</td>
+					</tr>
+					<tr>
+			      <td valign="top">
+			        <%= f.input :quantity_candle, :label => 'Quantidade de Candles: ', :collection => [["Um candle","1"], ["Dois candles","2"], ["Tres candles","3"]], :prompt => nil %>
+						</td>
+					</tr>
+					<tr>
+			      <td valign="top">
+			        <%= f.input :first_candle, :collection => @candles, :label => 'Primeiro Candle: ' %>
+			        <%= f.input :first_candle_type, :collection => %w( martelo), :label => 'Tipo do Primeiro Candle: ' %>
+						</td>
+					</tr>
+					<tr>
+			      <td valign="top">
+			        <%= f.input :second_candle, :collection => @candles, :label => 'Segundo Candle: ' %>
+			        <%= f.input :second_candle_type, :collection => %w( martelo), :label => 'Tipo do Segundo Candle: ' %>
+						</td>
+					</tr>
+					<tr>
+			      <td valign="top">
+			        <%= f.input :third_candle, :collection => @candles, :label => 'Terceiro Candle: ' %>
+			        <%= f.input :third_candle_type, :collection => %w( martelo), :label => 'Tipo do Terceiro Candle: ' %>
+						</td>
+					</tr>
+			</table>
+		</div>
+	</div>
+
+  <div class="actions">
+		<div class='buttonbar'>
+		  <%= f.button :submit, t('comum.create') %>
+			<%= 'ou' %>
+		  <%= link_to t('comum.cancel'), setups_path %>
+		</div>
+	</div>
+	
+<% end %>

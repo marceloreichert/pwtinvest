@@ -1,0 +1,33 @@
+<div class='title_tools'>
+  <%= link_to(t('paper.new'), new_paper_path) if current_user.fl_admin? %>
+</div>
+
+<div class='title'>
+  <span> <%= t('paper.title') %> </span>
+</div>
+
+<% @papers.each do |paper| %>
+<li>
+  <% if current_user.fl_admin? %>
+		<div class='tools'>
+	    <%= link_to(t('comum.edit'), edit_paper_path(paper)) << ' | ' %>
+	    <%= link_to(t('comum.show'), paper_path(paper)) << ' | '  %>
+	    <%= link_to(t('comum.delete'), paper, :confirm => 'Voce tem certeza?', :method => :delete ) %>
+		</div>
+	<% end %>
+
+  <div class='strip' id='none'> <%= paper.id %> </div>
+	
+  <div class='indent'>
+    <% if current_user.fl_admin? %>
+			<%= link_to(paper.symbol, paper_path(paper)) %> 
+		<% else %>
+			<%= paper.symbol %> 
+		<% end %>
+		&dash;
+		<%= paper.description %>
+    <br>
+	</div>
+</li>
+	
+<% end %>

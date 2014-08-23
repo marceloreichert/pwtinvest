@@ -1,0 +1,44 @@
+<%= simple_form_for(@paper) do |f| %>
+  <% if @paper.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@paper.errors.count, "error") %> prohibited this candle from being saved:</h2>
+
+      <ul>
+      <% @paper.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="inputs">
+		<div class='section'>
+		  <table width="500" cellpadding="0" cellspacing="5">
+					<tr>
+			      <td valign="top">
+			        <%= f.input :symbol, :label => 'Simbolo do Papel: ' %>
+						</td>
+					</tr>
+					<tr>
+			      <td valign="top">
+			        <%= f.input :description, :label => 'Descrição do papel: ' %>
+						</td>
+					</tr>
+					<tr>
+			      <td valign="top">
+			        <%= f.input :nr_lote, :label => 'Quantidade do Lote: ' %>
+						</td>
+					</tr>
+			</table>
+		</div>
+	</div>
+
+  <div class="actions">
+		<div class='buttonbar'>
+		  <%= f.button :submit, t('comum.create') %>
+			<%= 'ou' %>
+		  <%= link_to t('comum.cancel'), papers_path %>
+		</div>
+	</div>
+	
+<% end %>

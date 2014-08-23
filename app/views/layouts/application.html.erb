@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang='en' lang='en'>
+	<head>
+	  <title><%=t('comum.app')%> - PowerTask</title>
+		<%= stylesheet_link_tag "application" %>
+		<%= yield :styles %>
+
+		<%= javascript_include_tag "application" %>
+		<%= csrf_meta_tags %>
+	</head>
+
+	<body>
+		<%= render 'layouts/header' %>
+    <%= render "layouts/menus" %>
+    <%= render "layouts/tabbed" %>
+	</body>
+</html>

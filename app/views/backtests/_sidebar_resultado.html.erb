@@ -1,0 +1,84 @@
+<div class='panel' id='summary'>
+  <h4> <%= 'Retorno sobre Investimento' %> </h4>
+  <div>
+		<table>
+			<tr>
+				<td>Investimento:</td>
+				<td> <%= number_to_currency(params[:valor_investimento]) %> </td>
+			</tr>
+			<tr>
+				<td>Trades FECHADOS:</td>
+				<td><%= number_to_currency(@totais[:saldo_trades_finalizados]) %> </td>
+			</tr>
+			<tr>
+				<td>Trades ABERTOS:</td>
+				<td> <%= @totais[:saldo_trades_em_aberto].to_s %> </td>
+			</tr>
+			<tr>
+				<td>SALDO FINAL:</td>
+				<td><b><%= number_to_currency(@totais[:saldo_final]) %> </b></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class='panel' id='summary'>
+  <h4> <%= 'Padrões' %> </h4>
+  <div>
+		<table>
+			<tr>
+				<td>Encontrados:</td>
+				<td><%= @totais[:total_padroes_encontrados] %></td>
+			</tr>
+			<tr>
+				<td>Validados:</td>
+				<td><%= @totais[:total_padroes_validados] %></td>
+			</tr>
+			<tr>
+				<td>Vencedores:</td>
+				<td><%= @totais[:total_padroes_vencedores] %></td>
+			</tr>
+			<tr>
+				<td>Perdedores:</td>
+				<td><%= @totais[:total_padroes_perdedores] %></td>
+			</tr>
+			<tr>
+				<td>Perdedores em seqüência:</td>
+				<td><%= @totais[:total_padroes_perdedores_em_sequencia] %></td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class='panel' id='summary'>
+  <h4> <%= 'Resultados Finais' %> </h4>
+  <div>
+		<table>
+			<tr>
+				<td>Percentual de ACERTOS:</td>
+				<td><%= @totais[:percentual_de_acerto].to_s %> %</td>
+			</tr>
+			<tr>
+				<td>Valor TOTAL de ganho dos trades VENCEDORES:</td>
+				<td><%= number_to_currency(@totais[:total_valor_padroes_vencedores]) %></td>
+			</tr>
+			<tr>
+				<td>Valor MÉDIO de ganho dos trades VENCEDORES:</td>
+				<td><%= number_to_currency(@totais[:valor_ganho_medio_padroes_vencedores]) %></td>
+			</tr>
+			<tr>
+				<td>Valor TOTAL de perda dos trades PERDEDORES:</td>
+				<td><%= number_to_currency(@totais[:total_valor_padroes_perdedores]) %></td>
+			</tr>
+			<tr>
+				<td>Valor MÉDIO de perda dos trades PERDEDORES:</td>
+				<td><%= number_to_currency(@totais[:valor_perda_media_padroes_perdedores]) %></td>
+			</tr>
+			<tr>
+				<td>Quantidade de Trades ABERTOS:</td>
+				<td><%= @totais[:total_padroes_em_aberto] %></td>
+			</tr>
+		</table>
+	</div>
+</div>
+

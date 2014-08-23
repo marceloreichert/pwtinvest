@@ -1,0 +1,25 @@
+en:
+  comum:
+    app: pwtINVEST Beta v0.1
+    home_title: pwtINVEST
+    home_subtitle: Backtest
+    welcome: Welcome
+    about: About PowerTask
+    logout: Logout
+    
+  menu:
+    home: Home
+    backtest: BackTest
+    rastreador: Tracker
+    info: Info User
+
+  sign_in:
+    user: Login
+    user_help: Make your login
+    
+  sign_up:
+    user: New User
+    user_help: Use pwtINVEST.
+
+  
+  

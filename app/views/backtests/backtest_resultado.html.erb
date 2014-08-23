@@ -1,0 +1,39 @@
+<div class='title'>
+  <span> <%= "Resultados do BackTest" %> </span>
+</div>
+<br>
+
+<div class='subtitle'>
+  <span> <%= "Dados Informados pelo Usuário" %> </span>
+</div>
+<div class="inner">
+	<%= render("dados_backtesting") %>
+</div>
+
+<br>
+<div class='subtitle'>
+  <span> <%= "Resultados por Cada Trade Efetuado" %> </span>
+</div>
+<div class='list'>
+	<div id='tickets'>
+  <% unless @trade_results.empty? %>
+    <%= render "backtest_resultado_trade", :collection => @trade_results %>
+  <% else %>
+    <%= render "common/empty" %>
+	<% end %>
+	</div>
+</div>
+			
+<% if @ver == "Ver SOMENTE Resultado Financeiro" || @ver == "Ver Resultado por Trade e Financeiro" %>
+	<h2 class="title">Resultados Financeiros</h2>
+	<div class="inner">
+		<%= render(:partial => "resumo_financeiro") %>
+		<div class="actions-bar">
+			<div class="actions"></div>
+			<div class="clear"></div>
+			<%= link_to 'Executar outro BackTest', root_path %>
+		</div>
+	</div>
+<% end %>
+
+<% content_for :sidebar, render(:partial => 'sidebar_resultado') -%>

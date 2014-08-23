@@ -1,0 +1,70 @@
+<div class="block">
+  <div class="secondary-navigation">
+    <ul>
+      <li class="first active"><%= link_to 'Meus Padrões', user_setups_path  %></li>
+    </ul>
+    <div class="clear"></div>
+  </div>          
+  <div class="content">
+    <div class="inner">
+        <p>
+          <b>Nome do Padrão:</b>
+          <%= @user_setup.setup %>
+        </p>
+
+        <p>
+          <b>Descrição do Padrão:</b>
+          <%= @user_setup.description %>
+        </p>
+        <p>
+          <b>Primeiro Candle do Padrão:</b>
+          <%= UserSetup.descricao_tipo_candle(@user_setup.primeiro_candle) %>
+        </p>
+        <p>
+          <b>Segundo Candle do Padrão:</b>
+          <%= UserSetup.descricao_tipo_candle(@user_setup.segundo_candle) %>
+        </p>
+        <p>
+          <b>Terceiro Candle do Padrão:</b>
+          <%= UserSetup.descricao_tipo_candle(@user_setup.terceiro_candle) %>
+        </p>
+
+	      <p><%= link_to 'Editar os Dados do Padrão', edit_user_setup_path(@user_setup) %> </p>
+
+	      <table class="table">
+	        <tr>             
+						<th class="first">ID</th>
+						<th>Relacionamentos entre Candles</th>
+						<th class="last">&nbsp;</th>
+	        </tr>
+        	<% @user_setup_rels.each do |rels| -%>
+		      	<tr class="<%= cycle("odd", "even") %>">
+							<td><%= rels.id %></td>
+							<td>
+								<b><%= rels.candle_x_value %></b>
+								do
+								<b><%= rels.candle_x_position %> candle</b>
+								é
+								<b><%= rels.value %></b> que
+								<b><%= rels.candle_y_value %></b>
+								do
+								<b><%= rels.candle_y_position %> candle.</b>
+								<br>
+							</td>
+				    	<td><%= link_to 'Deletar', rels, :confirm => 'Voce tem certeza?', :method => :delete %></td>
+		     		</tr>          
+					<% end %>
+				</table>
+
+				<% if @user_setup_rels.size == 0 %>
+						Não existem relacionamentos cadastrados.
+						<br><br>
+				<% end %>
+				
+      	<%= link_to 'Inserir Novo Relacionamento entre Candles', new_user_setup_rel_path %>
+
+    </div>
+  </div>
+</div>
+
+<% content_for :sidebar, render(:partial => 'home/sidebar') -%>

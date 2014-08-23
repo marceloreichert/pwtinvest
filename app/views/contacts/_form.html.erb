@@ -1,0 +1,22 @@
+<div class="group">
+  <%= f.label :name, "Nome", :class => :label %>
+  <%= f.text_field :name, :class => 'text_field' %>
+  <span class="description">Identifique-se</span>
+</div>
+
+<div class="group">
+  <%= f.label :email, "E-Mail", :class => :label %>
+  <%= f.text_field :email, :class => 'text_field' %>
+  <span class="description">Informe seu e-mail para que possamos responder.</span>
+</div>
+
+<div class="group">
+  <%= f.label :message, "Mensagem", :class => :label %>
+  <%= f.text_area :message, :class => 'text_area' %>
+  <span class="description">Digite a mensagem</span>
+</div>
+
+<div class="group navform">
+  <input type="submit" class="button" value="Enviar &rarr;" /> or <%= link_to 'Cancelar', root_path %>
+</div>
+

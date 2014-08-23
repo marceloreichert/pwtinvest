@@ -1,0 +1,18 @@
+<div class='standalone' id='standalone'>
+
+	<div class='title_tools'> <%= t("sign_in.user_help") %> </div>
+	<div class='title'> <%= t("sign_in.user") %> </div>
+
+	<div class='section'>
+		<%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f| %>
+			<%= f.input :email, :label => 'E-mail: ' %>
+			<%= f.input :password, :label => 'Senha: ' %>
+
+	  	<p><%= f.submit t("sign_in.user") %></p>
+	
+			<%= render "users/shared/links" %>
+	  <% end %>
+	</div>
+</div>
+
+<% content_for :sidebar, render(:partial => 'home/sidebar') -%>

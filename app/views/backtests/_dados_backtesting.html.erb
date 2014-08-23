@@ -1,0 +1,100 @@
+<table>
+	<tr>
+		<td>Período pesquisado:</td>
+		<td>
+			<b><%= params[:datainicial][:day]%>/<%= params[:datainicial][:month]%>/<%= params[:datainicial][:year]%></b>
+			a
+			<b><%= params[:datafinal][:day]%>/<%= params[:datafinal][:month]%>/<%= params[:datafinal][:year]%></b>
+		</td>
+	</tr>
+	<tr>
+		<td>Papel:</td>
+		<td><b><%= Paper.busca_papel(params[:paper][:id]).symbol.split(".")[0] %></b></td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td>Máximo de Candles do Trade:</td>
+		<td><b><%= params[:quantidade_maxima_candle_trade] %></b></td>
+	</tr>
+	<tr>
+		<td>Padrão:</td>
+		<td><b><%= Setup.busca_setup(params[:setup][:id]).nil? ? "-- Selecione um padrão --" : Setup.busca_setup(params[:setup][:id]).setup %> </b></td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td>Máximo Perda por Trade:</td>
+		<td><b><%= params[:perc_perda_trade] %> % </b></td>
+	</tr>
+	<tr>
+		<td>Periodicidade:</td>
+		<td><b><%= params[:prazo] %></b></td>
+		<td>&nbsp;&nbsp;&nbsp;</td>
+		<td>Máximo Perda Geral:</td>
+		<td>
+			<b>
+				<% if params[:perda_geral_enabled] %>
+					<%=params[:perc_perda_geral] %> %
+				<% else %>
+					Opção desabilitada
+				<% end %>
+			</b>
+		</td>
+	</tr>
+	<tr>
+		<td>Investimento Inicial:</td>
+		<td><b><%= number_to_currency(params[:valor_investimento]) %></b></td>
+	</tr>
+	<tr>
+		<td>Valor de Corretagem:</td>
+		<td><b><%= number_to_currency(params[:valor_corretagem]) %></b></td>
+	</tr>
+	<tr>
+		<td>Ponto de Entrada:</td>
+		<td colspan="5">
+			<b>
+			<%= params[:pe1_ponto_de_entrada].humanize %>
+			<%= number_to_currency(params[:pe1_valor]) %>
+			<%= params[:pe1_acima_abaixo] %>
+			<%= Backtest.carrega_lista_ponto_do_candle.rassoc(params[:pe1_ponto_do_candle])[0] %>
+			do
+			<%= Setup.carrega_lista_de_candles_do_setup(params[:setup][:id]).rassoc(params[:pe1_qual_candle].to_i)[0] %>
+			candle do padrão.
+			</b>
+		</td>
+	</tr>
+	<tr>
+		<td>Ponto de Stop Loss:</td>
+		<td colspan="5">
+			<b>
+			Ao atingir
+			<%= number_to_currency(params[:ponto_stop_valor]) %>
+			<%= params[:ponto_stop_acima_abaixo] %>
+			<%= Backtest.carrega_lista_ponto_do_candle.rassoc(params[:ponto_stop_ponto_do_candle])[0] %>
+			do
+			<% if params[:ponto_stop_lista_de_candles] == '1' %>
+				<%= 'primeiro' %>
+			<% elsif params[:ponto_stop_lista_de_candles] == '2' %>
+				<%= 'segundo' %>
+			<% elsif params[:ponto_stop_lista_de_candles] == '3' %>
+				<%= 'terceiro' %>
+			<% end %>
+			candle do padrão.
+			</b>
+		</td>
+	</tr>
+	<tr>
+		<td>Ponto de Saída:</td>
+		<td colspan="5">
+			<b>
+			Lucro de
+			<%= params[:ponto_saida_valor]%> % acima do Ponto de Entrada.
+			</b>
+		</td>
+	</tr>
+	<tr>
+		<td>Zerar Risco em:</td>
+		<td colspan="5">
+			<b>
+			Vender
+			<%= params[:ponto_zerar_risco_percentual] %> %
+			para zerar risco, o restante no Ponto de Saída.
+			</b>
+		</td>
+	</tr>
+</table>

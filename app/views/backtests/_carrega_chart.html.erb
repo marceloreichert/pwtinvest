@@ -1,0 +1,48 @@
+<table>
+	<tr>
+		<td>
+			<h4><%= @setup.description %></h4>
+			<% if @setup.first_candle != "N" %>
+				&bull;
+				<%= 'Primeiro candle => ' << Setup.descricao_tipo_candle(@setup.first_candle) %><br>
+				<% if @setup.second_candle != "N" %>
+					&bull;
+					<%=  'Segundo candle => ' << Setup.descricao_tipo_candle(@setup.second_candle) %><br>
+					<% if @setup.third_candle != "N" %>
+						&bull;
+						<%= 'Terceiro candle => ' << Setup.descricao_tipo_candle(@setup.third_candle) %>
+					<% end %>
+				<% end%>
+			<% end %>
+		  <br>
+			<tt>
+				<%= 'Relação entre os candles do Padrão: ' %>
+			</tt>
+			<dt>
+				<% unless @setup.setup_rels.empty? -%>
+					<% @setup.setup_rels.each do |setup_rels| -%>
+						&bull;
+						<%= setup_rels.candle_x_value %>
+						do
+						<%= setup_rels.candle_x_position %> candle
+						é
+						<%= setup_rels.value %> que
+						<%= setup_rels.candle_y_value %>
+						do
+						<%= setup_rels.candle_y_position %> candle.
+						&nbsp;
+						<br>
+					<% end %>
+				<% else %>
+					<% if @setup.quantity_candle == 1 %>
+						Existe somente um candle.
+						<% end %>
+				<% end %>
+			</dt>
+		</td>
+		<td>
+			<% xml = Setup.gera_xml_do_grafico(@setup_id, 2).to_xml %>
+			<% render_chart_html '/FusionCharts/FCF_Candlestick.swf', "", xml, '1', 170, 120, nil  %>
+		</td>
+	</tr>
+</table>

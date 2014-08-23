@@ -1,0 +1,41 @@
+<div class='title_tools'>
+  <%= link_to(t('comum.index'), papers_path) %>
+  <%= ' | ' %>
+	<%= link_to(t('paper.new'), new_paper_path)%>
+</div>
+
+<div class='title'> <%= t('paper.show') %> </div>
+
+<div class='section'>
+  <table width="500" cellpadding="0" cellspacing="0">
+			<tr>
+	      <td valign="top">
+	        <div class='label top req'> <%=t("paper.symbol") %>: </div>
+	      </td>
+				<td>
+					<%= @paper.symbol %>
+				</td>
+			</tr>
+			<tr>
+	      <td valign="top">
+	        <div class='label top req'> <%=t("paper.description") %>: </div>
+	      </td>
+				<td>
+					<%= @paper.description %>
+				</td>
+			</tr>
+			<tr>
+	      <td valign="top">
+	        <div class='label top req'> <%=t("paper.nr_lote") %>: </div>
+	      </td>
+				<td>
+					<%= @paper.nr_lote %>
+				</td>
+			</tr>
+	</table>
+</div>
+
+<%= link_to 'Editar', edit_paper_path(@paper) %> | 
+<%= link_to 'Voltar', papers_path %>
+
+<% content_for :sidebar, render(:partial => 'home/sidebar') -%>

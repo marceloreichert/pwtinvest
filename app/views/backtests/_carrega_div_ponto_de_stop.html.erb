@@ -1,0 +1,7 @@
+Ao atingir 
+<%= text_field_tag 'ponto_stop_valor', '0.01', :size => 3 %> reais 
+<%= select_tag("ponto_stop_acima_abaixo", options_for_select(Backtest.carrega_lista_abaixo_acima)) %>
+<%= select_tag("ponto_stop_ponto_do_candle", options_for_select(Backtest.carrega_lista_ponto_do_candle2)) -%>
+&nbsp;do&nbsp;
+<%= select_tag("ponto_stop_lista_de_candles", options_for_select(@lista_de_candles)) -%>&nbsp;
+candle do padrão.

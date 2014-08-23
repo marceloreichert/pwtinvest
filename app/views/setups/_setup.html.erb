@@ -1,0 +1,69 @@
+<div class='title_tools'>
+  <%= link_to(t('setup.new'), new_setup_path) %>
+</div>
+
+<div class='title'>
+  <span> <%= t('setup.user.title') %> </span>
+</div>
+
+<% @setup.each do |setup| %>
+<li>
+  <div class='strip' id='none'> <%= setup.id %> </div>
+
+  <div class='tools'>
+		<%= link_to 'Editar', edit_setup_path(setup) %> |
+		<%= link_to 'Deletar', setup, :method => :delete, :confirm => 'Você tem certeza que deseja deletar o padrão ?' %><br>
+		<% render_chart_html 'FCF_Candlestick.swf', '', Setup.gera_xml_do_grafico(setup, 3).to_xml, '1', 150, 110, nil%>
+	</div>
+	
+  <div class='indent'>
+    <%= link_to(setup.setup, setup_path(setup)) %> 
+		&dash;
+		<%= setup.description %>
+		<br>
+		<% if setup.first_candle != "N" %>
+			<br>&bull;
+			<%= 'Primeiro ' << Setup.descricao_tipo_candle(setup.first_candle) %><br>
+			<% if setup.second_candle != "N" %>
+				&bull;
+				<%=  'Segundo ' << Setup.descricao_tipo_candle(setup.second_candle) %><br>
+				<% if setup.third_candle != "N" %>
+					&bull;
+					<%= 'Terceiro ' << Setup.descricao_tipo_candle(setup.third_candle) %>
+				<% end %>
+			<% end%>
+		<% end %>
+    <br>
+		<tt>
+			<%= 'Relacao entre os candles do Setup: ' %>
+		</tt>
+		<dt>
+			<% unless setup.setup_rels.empty? -%>
+				<% setup.setup_rels.each do |setup_rels| -%>
+					-
+					<%= setup_rels.candle_x_value %>
+					do
+					<%= setup_rels.candle_x_position %> candle
+					é
+					<%= setup_rels.value %> que
+					<%= setup_rels.candle_y_value %>
+					do
+					<%= setup_rels.candle_y_position %> candle. 
+					&nbsp;
+					<%= link_to 'Inserir', :controller => 'setup_rels', :action => 'new', :id => setup, :obj1 => setup.first_candle, :obj2 => setup.second_candle, :obj3 => setup.third_candle %> |
+					<%= link_to 'Editar', :controller => 'setup_rels', :action => 'edit', :id => setup_rels %> |
+					<%= link_to 'Deletar', setup_rels, :method => 'delete', :confirm => 'Você tem certeza que deseja deletar um relacionamento??' %>
+					<br>
+				<% end %>
+			<% else %>
+				<% if setup.quantity_candle == 1 %>
+					Existe somente um candle.
+				<%else%>
+					<%= link_to 'Inserir Novo Relacionamento', :controller => 'setup_rels', :action => 'new', :id => setup, :obj1 => setup.first_candle, :obj2 => setup.second_candle, :obj3 => setup.third_candle %>
+					<% end %>
+			<% end %>
+		</dt>
+	</div>
+</li>
+	
+<% end %>

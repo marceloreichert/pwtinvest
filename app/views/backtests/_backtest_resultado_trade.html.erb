@@ -1,0 +1,65 @@
+<% @trade_results.each do |trade| %>
+	<% if trade[:status] != 'NAO VALIDADO_old'%>
+		<li>
+			<table>
+				<tr>
+					<td>
+					  <div class='striptrade' id='none'>
+							<%= trade[:data_do_padrao].strftime("Semana: %W") %>
+							<br>Data: <%= trade[:data_do_padrao].strftime("%d/%m/%Y") %>
+							<% if not trade[:hora_do_padrao].nil? %>
+								<%= trade[:hora_do_padrao].to_s %>
+							<% end %>
+							<br><br>Investimento:
+							<%= number_to_currency(trade[:valor_total_compra]) %>
+							<br>Lotes Comprados:
+							<%= trade[:lotes_comprados] %>
+							<br>Retorno:
+							<%= number_to_currency(trade[:valor_total_venda]) %>
+
+
+						<% if trade[:valor_resultado].to_f > 0.00 %>
+					  	<div class='striptrade_green' id='none'>Resultado: <%= number_to_currency(trade[:valor_resultado]) %></div>
+					  	<div class='striptrade_green' id='none'>
+								% Sobre Investimento: <%= number_to_currency(trade[:perc_resultado]) %>%
+							</div>
+						<% elsif trade[:valor_resultado].to_f == 0.00 %>
+					  	<div class='striptrade_yellow' id='none'>Resultado: <%= number_to_currency(trade[:valor_resultado]) %> </div>
+						<% else %>
+					  	<div class='striptrade_red' id='none'>Resultado: <%= number_to_currency(trade[:valor_resultado]) %></div>
+					  	<div class='striptrade_red' id='none'>% Sobre Investimento: <%= number_to_currency(trade[:perc_resultado]) %>%</div>
+						<% end %>
+						</div>
+					</td>
+
+					<td>
+					  <div class='indentchart1'>
+					  	<% trade[:historico].each do |hist| %>
+								<b><%= hist[:title] %> - </b>
+								<%= hist[:description] %><br>
+							<% end %>
+
+							<% if not @mm_descricao.nil? %>
+								<br><%=@mm_descricao + "=" + trade[:valor_media].to_s%>
+							<% end %>
+							<% @page_title="" %>
+							<% @page_heading="" %>
+							<% @page_subheading="" %>
+
+					    <tt>
+								ID = <%= trade[:id] %>
+								&bull;
+								Ponto de Entrada = <%= number_to_currency(trade[:valor_ponto_compra]) %>
+								&bull;
+								Ponto de Saída = <%= number_to_currency(trade[:valor_ponto_venda]) %>
+								&bull;
+								Stop Loss = <%= number_to_currency(trade[:valor_ponto_stop]) %>
+							</tt>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</li>
+	<% end %>
+<% end %>
+

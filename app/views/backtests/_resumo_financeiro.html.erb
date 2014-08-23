@@ -1,0 +1,31 @@
+<table class="table">
+	<tr>
+		<th class="first">ID</th>
+		<th>Data</th>
+		<th>Tipo</th>
+		<th>Valor</th>
+		<th>Saldo</th>
+		<th>Risco Trade</th>
+		<th class="last">Risco Acumulado</th>
+	</tr>
+
+	<% @retorno[:extrato].each do |e| -%>
+        <tr class="<%= cycle("odd", "even") %>">
+			<td><%= e[:id] %></td>
+			<td><%= e[:data].to_s_br %></td>
+			<td>
+				<% if e[:tipo] == "C"%>
+					COMPRA
+				<%elsif e[:tipo] == "V"%>
+					VENDA
+				<% else %>
+					SALDO INICIAL
+				<%end%>
+			</td>
+			<td><%= number_to_currency(e[:valor]) %></td>
+			<td><%= number_to_currency(e[:saldo]) %></td>
+			<td><%= number_to_currency(e[:risco_do_trade]) %></td>
+			<td><%= number_to_currency(e[:risco_acumulado]) %></td>
+		</tr>
+	<% end %>
+</table>

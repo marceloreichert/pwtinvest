@@ -1,0 +1,22 @@
+<table>
+	<tr height=30>
+		<td>Novo Relacionamento:</td>
+		<td>
+			O valor de
+			<%= f.select( :candle_x_value, @lista_candle_value) %>
+			do
+			<%= f.select( :candle_x_position, @lista_candle_position) %>
+			candle é
+			<%= f.select( :value, [['maior'],['menor']]) %>
+			ao valor de 
+			<%= f.select( :candle_y_value, @lista_candle_value) %>
+			do
+			<%= f.select( :candle_y_position, @lista_candle_position) %>
+		</td>
+	</tr>
+</table>
+
+<p>
+	<td><%= f.submit 'Enviar Dados'%> |</td>
+	<td><%= link_to 'Voltar', :back %></td>
+</p>

@@ -1,0 +1,53 @@
+# Additional translations at http://github.com/plataformatec/devise/wiki/I18n
+
+br:
+  errors:
+    messages:
+      expired: "expirado, por favor requisite outro"
+      not_found: "não encontrado"
+      already_confirmed: "ja foi confirmado, por favor tente fazer o login"
+      not_locked: "was not locked"
+      not_saved:
+        one: "1 error prohibited this %{resource} from being saved:"
+        other: "%{count} errors prohibited this %{resource} from being saved:"
+
+  devise:
+    failure:
+      already_authenticated: 'You are already signed in.'
+      unauthenticated: 'You need to sign in or sign up before continuing.'
+      unconfirmed: 'You have to confirm your account before continuing.'
+      locked: 'Your account is locked.'
+      invalid: 'E-mail ou Senha inválidos.'
+      invalid_token: 'Invalid authentication token.'
+      timeout: 'Your session expired, please sign in again to continue.'
+      inactive: 'Your account was not activated yet.'
+    sessions:
+      signed_in: 'Login efetuado com sucesso.'
+      signed_out: 'Logout efetuado com sucesso.'
+    passwords:
+      send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'
+      updated: 'Your password was changed successfully. You are now signed in.'
+    confirmations:
+      send_instructions: 'You will receive an email with instructions about how to confirm your account in a few minutes.'
+      confirmed: 'Your account was successfully confirmed. You are now signed in.'
+    registrations:
+      signed_up: 'Bem-Vindo! Cadastrado com sucesso.'
+      inactive_signed_up: 'Cadastrado com sucesso. Entretanto, voce ainda não esta logado porque sua conta está %{reason}.'
+      updated: 'You updated your account successfully.'
+      destroyed: 'Bye! Your account was successfully cancelled. We hope to see you again soon.'
+    unlocks:
+      send_instructions: 'You will receive an email with instructions about how to unlock your account in a few minutes.'
+      unlocked: 'Your account was successfully unlocked. You are now signed in.'
+    omniauth_callbacks:
+      success: 'Successfully authorized from %{kind} account.'
+      failure: 'Could not authorize you from %{kind} because "%{reason}".'
+    mailer:
+      confirmation_instructions:
+        subject: 'Confirmation instructions'
+        welcome: Bem-Vindo
+        you_can_confirm_your_account_through_the_link_below: Confirme sua conta através do link abaixo
+        confirm_my_account: Confirme minha conta
+      reset_password_instructions:
+        subject: 'Reset password instructions'
+      unlock_instructions:
+        subject: 'Unlock Instructions'

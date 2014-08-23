@@ -1,0 +1,151 @@
+	<div class="block">
+		<div class="content">
+			<h2 class="title"><%= t('backtest.title')%></h2>
+	    <div class="inner">
+			<%= form_tag(:action=>'backtest_resultado', :method=>'post', :html => { :class => :form }) do |f| %>
+			<table>
+				<tr>
+					<td><h4>Dados Gerais</h4></td>
+				</tr>
+				<tr>
+					<td align="right">Papel:</td>
+					<td><%= select('paper', 'id', Paper.all.collect{|e| [e.symbol.split('.').first << " - " << e.description, e.id]}) -%></td>
+				</tr>
+				<tr>
+					<td align="right">Período de Pesquisa:</td>
+					<td><%= select_date(@datainicial, :prefix => 'datainicial', :start_year => 2000, :end_year => 2012, :order => [:day, :month, :year], :use_month_names => %w(Janeiro Fevereiro Março Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro)) -%>&nbsp;a&nbsp;
+							<%= select_date(@datafinal, :prefix => 'datafinal', :order => [:day, :month, :year], :use_month_names => %w(Janeiro Fevereiro Março Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro)) -%>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Prazo:</td>
+					<td><%= select_tag("prazo", options_for_select(%w(Diario))) %></td>
+				</tr>
+			</table>
+
+			<br>
+			<table>
+				<tr>
+					<td><h4>Investimentos e Custos</h4></td>
+				</tr>
+				<tr>
+					<td align="right"><%=t('backtest.investment')%>:</td>
+					<td><%= text_field_tag 'valor_investimento', 100000, :size => 13 %> </td>
+					<td>&nbsp;&nbsp;</td>
+					<td align="right">Valor Corretagem R$:</td>
+					<td><%= text_field_tag 'valor_corretagem', 15.99, :size => 13 %></td>
+				</tr>
+			</table>
+
+			<br>
+			<table>
+				<tr>
+					<td><h4>Manejo de Risco</h4></td>
+				</tr>
+				<tr>
+					<td align="right">
+						<%= check_box_tag( 'perda_trade_enabled', '1', checked = true) %></td><td>
+						Avaliar o RISCO MÁXIMO por TRADE para o backtest de
+						<%= text_field_tag 'perc_perda_trade', '2', :size => 1 %> %.
+					</td>
+				</tr>
+				<tr>
+					<td align="right">
+						<%= check_box_tag( 'perda_geral_enabled', '1', checked = true) %></td><td>
+						Avaliar o RISCO TOTAL para o backtest de
+						<%= text_field_tag 'perc_perda_geral', '6', :size => 1 %> %.
+					</td>
+				</tr>
+			</table>
+
+			<br>
+			<table>
+				<tr>
+					<td><h4>Padrão do Trade</h4></td>
+					<td><%= select('setup', 'id', @lista_de_padroes) -%></td>
+					<td>&nbsp;</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td>
+						<div id='div_chart'>
+							<%= render "carrega_chart" %>
+						</div>
+					</td>
+				</tr>
+			</table>
+
+			<br>
+			<table>
+				<tr>
+					<td><h4>Ponto de Entrada do Trade</h4></td>
+				<tr>
+					<td align="right">Ponto de Compra:</td>
+					<td>
+						<div id='div_ponto_de_entrada'>
+							<%= render "carrega_div_ponto_de_entrada" %>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Média Móvel(*):</td>
+					<td><%= check_box_tag( 'mm_enabled', '1', checked = false, :disabled => true) %> O padrão ocorre <%= select_tag("mm_local", options_for_select(@ponto_acima_abaixo_sobre))%> da media <%= select_tag("mm_tipo", options_for_select(@tipo_de_media))%> de <%= text_field_tag 'mm_periodo', "21", :size => 1 %> períodos.</td>
+				</tr>
+				<tr>
+					<td align="right">IFR(*):</td>
+					<td><%= check_box_tag( 'ifr_enabled', '1', checked = false, :disabled => true) %> Somente comprar quando IFR de <%= text_field_tag 'ifr_periodo', '9', :size => 1 %> periodos estiver <%= select_tag("ifr_local", "<option>Abaixo</option><option>Acima</option>")%> de <%= text_field_tag 'ifr_valor', '50', :size => 1 %>.</td>
+				</tr>
+				<tr>
+					<td align="right">(*)Opções ainda nao disponiveis</td>
+					<td></td>
+				</tr>
+			</table>
+
+			<br>
+			<table>
+				<tr>
+					<td><h4>Ponto de Saída do Trade</h4></td>
+				</tr>
+				<tr>
+					<td align="right">Ponto de Venda:</td>
+					<td>Ao atingir lucro de <%= text_field_tag 'ponto_saida_valor', '6', :size => 1 %> % acima do Ponto de Entrada do trade.</td>
+				</tr>
+				<tr>
+					<td align="right">Ponto de Stop Loss:</td>
+					<td>
+						<div id='div_ponto_de_stop'>
+							<%= render "carrega_div_ponto_de_stop" %>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td align="right">Ponto de Zerar Risco:</td>
+					<td>Vender <%= text_field_tag 'ponto_zerar_risco_percentual', '70', :size => 1 %> % do trade para zerar risco, o restante no Ponto de Venda.</td>
+				</tr>
+				<tr>
+					<td align="right">Tempo Máximo:</td>
+					<td><%= text_field_tag 'quantidade_maxima_candle_trade', '05', :size => 1 %> candle(s) é o tempo máximo de duração do trade.</td>
+				</tr>
+			</table>
+			<br>
+			<%= submit_tag 'Executar BackTesting', :disabled => false %>
+		<%end%>
+		<br>
+  	</div>
+	</div>
+</div>
+<script>
+	$('#setup_id').change(
+		function()
+		{
+			var cod_setup = $('select#setup_id :selected').val();
+			$.get('atualiza_dados_ponto_de_entrada/'+cod_setup, function(data){
+				$("#div_ponto_de_entrada").html(data);})
+			$.get('atualiza_dados_ponto_de_stop/'+cod_setup, function(data){
+				$("#div_ponto_de_stop").html(data);})
+			$.get('atualiza_chart/'+cod_setup, function(data){
+				$("#div_chart").html(data);})
+  	})
+</script>
+
+<% content_for :sidebar, render('home/sidebar') -%>

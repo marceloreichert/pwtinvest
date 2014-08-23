@@ -1,0 +1,29 @@
+<% unless user_signed_in? %>
+
+	<div class='standalone' id='standalone'>
+		<div class='title_tools'> <%= t("comum.home_subtitle") %> </div>
+		<div class='title'> <%= t("comum.home_title") %> </div>
+		<div class='section'>
+			<p>
+				<div class='subtitle'> <%= link_to t('sign_in.user'), new_user_session_path %> </div>
+				<div class='tools'> <%= t('sign_in.user_help') %> </div>
+		  </p>
+			<br>
+			<p>
+				<div class='subtitle'> <%= link_to t('sign_up.user'), new_user_registration_path %> </div>
+				<div class='tools'> <%= t('sign_up.user_help') %> </div>
+		  </p>
+		</div>
+	</div>
+<% else %>
+
+	<p><h2>O <%= t('comum.app')%> permite que você faça Backtest definindo seus próprios padrões de compra e venda de ações.</h2></p>
+	<p>
+<%= image_tag('tela01.png', :size =>"400x250") %>
+	&nbsp;
+	&nbsp;
+	<%= image_tag('tela03.png', :size =>"400x250") %>
+	</p>
+<% end %>
+
+<% content_for :sidebar, render(:partial => 'sidebar') -%>

@@ -1,0 +1,16 @@
+<% view   ||= controller.controller_name %>
+<% action ||= controller.action_name %>
+
+<% if action == 'new' || action == 'edit' || action == 'show' %>
+	<% sidebar = "#{view}/sidebar" %>
+<% else %>
+	<% sidebar = "#{view}/sidebar_filter" %>
+<% end %>
+
+<%= yield(:sidebar) %>
+
+<% begin %>
+  <%= render sidebar %>
+  <% rescue MissingTemplate %>
+<% end %>
+

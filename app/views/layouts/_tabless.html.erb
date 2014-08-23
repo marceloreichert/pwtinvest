@@ -1,0 +1,13 @@
+<%= show_flash(:sticky => true) %>
+
+<div id='container'>
+	<%- flash.each do |name, msg| -%>
+  	<%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+	<%- end -%>
+</div>
+
+<div class='tabless'> 
+	<%= yield %>
+</div>
+<center> <%= render "layouts/footer" %></center>
+<br>

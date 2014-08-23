@@ -1,0 +1,9 @@
+<div class='title_tools'>
+  <%= link_to(t('comum.index'), papers_path) %>
+  <%= ' | ' %>
+	<%= link_to(t('setup.new'), new_paper_path)%>
+</div>
+
+<div class='title'> <%= t('paper.edit') %> </div>
+
+<%= render "form" %>

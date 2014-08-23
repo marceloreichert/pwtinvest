@@ -1,0 +1,9 @@
+<div class='title_tools'>
+  <%= link_to(t('comum.index'), setups_path) %>
+</div>
+
+<div class='title'> <%= t('setup.new') %> </div>
+
+<%= render "form" %>
+
+<% content_for :sidebar, render(:partial => 'home/sidebar') -%>

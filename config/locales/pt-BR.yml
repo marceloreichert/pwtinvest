@@ -1,0 +1,57 @@
+pt-BR:
+  comum:
+    app: pwtINVEST v0.0.1
+    home_title: pwtINVEST
+    home_subtitle: Backtest e Rastreabilidade
+    remember_me: Lembrar a senha
+    welcome: Bem-Vindo(a)
+    about: Sobre a PowerTask
+    logout: Sair
+    edit: Editar
+    show: Mostrar
+    cancel: Cancelar
+    index: Listar Todos
+    create: Gravar Dados
+    delete: Deletar
+
+  menu:
+    home: Início
+    backtest: BackTest
+    rastreador: Rastreador
+    info: Info Usuário
+
+  sign_in:
+    user: Login
+    user_help: Faça seu login
+
+  sign_up:
+    user: Cadastrar Novo Usuário
+    user_help: pwtINVEST
+
+  forgot_your_password: Esqueceu sua senha?
+  didnt_receive_confirmation_instructions: Não recebeu a instrução para confirmação?
+  send_me_reset_password_instructions: Enviar as instruções para resetar a senha
+  resend_confirmation_instructions: Enviar instruções de confirmação
+
+  backtest:
+    title: BackTest
+    investment: Investimento de R$
+
+  paper:
+    new: Cadastrar Novo Papel
+    title: Papéis
+
+  setup:
+    new: Cadastrar Novo Padrão
+    title: Padrões Pré-Configurados
+    edit: Editar Padrão
+    show: Mostrar detalhes do Padrão
+    setup: Nome do Padrão
+    description: Descrição
+    first_candle: Primeiro Candle do Padrão
+    second_candle: Segundo Candle do Padrão
+    third_candle: Terceiro Candle do Padrão
+    user:
+      title: Meus Padrões
+    pwt:
+      title: Padrões Pré-Configurados

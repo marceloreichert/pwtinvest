@@ -1,0 +1,8 @@
+<div class='title_tools'>
+  <%= link_to(t('comum.index'), setups_path) %>
+  <%= ' | ' %>
+	<%= link_to(t('setup.new'), new_setup_path)%>
+</div>
+
+<div class='title'> <%= t('setup.edit') %> </div>
+<%= render :partial => "form" %>

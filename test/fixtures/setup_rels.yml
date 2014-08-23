@@ -1,0 +1,17 @@
+one:
+  id: 1
+  setup_id: 1
+  candle_x_value: abertura
+  candle_x_position: primeiro
+  value: maior
+  candle_y_value: fechamento
+  candle_y_position: segundo
+
+two:
+  id: 2
+  setup_id: 1
+  candle_x_value: fechamento
+  candle_x_position: primeiro
+  value: menor
+  candle_y_value: abertura
+  candle_y_position: segundo

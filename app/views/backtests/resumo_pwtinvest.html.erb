@@ -1,0 +1,28 @@
+<div class="block">
+
+  <div class="secondary-navigation">
+    <ul>
+      <li class="first active"><%= link_to 'Resumo PWT::INVEST', :action => root_path %></li>
+    </ul>
+    <div class="clear"></div>
+  </div>          
+
+	 <div class="content">          
+		<h2 class="title">Resumo PWT::INVEST</h2>
+		<div class="inner">
+			<p>Total de usuários cadastrados: <%= @count %> </p> 
+			<p>Total de usuários logados agora: <%= @usuarios_logados %> </p> 
+			<p>Quantidade de cadastros hoje: <%= @cad_hoje %> </p> 
+			<p>Quantidade de cadastros ontem: <%= @cad_ontem %> </p> 
+			<p>Quantidade de cadastros na semana: <%= @cad_semana %> </p> 
+			<p>Quantidade de cadastros no mês: <%= @cad_mes %> </p> 
+
+			   <div class="actions-bar">
+			    		<div class="actions">      		</div>
+			      	<div class="clear"></div>
+				<%= link_to 'Voltar', :back %>
+			</div>
+	</div>
+	</div>
+</div>
+

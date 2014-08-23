@@ -1,0 +1,81 @@
+<div class='title_tools'>
+  <%= link_to(t('comum.index'), setups_path) %>
+  <%= ' | ' %>
+	<%= link_to(t('setup.new'), new_setup_path)%>
+</div>
+
+<div class='title'> <%= t('setup.show') %> </div>
+
+<div class='section'>
+  <table width="500" cellpadding="0" cellspacing="0">
+			<tr>
+	      <td valign="top">
+	        <div class='label top req'> <%=t("setup.setup") %>: </div>
+	      </td>
+				<td>
+					<%= @setup.setup %>
+				</td>
+			</tr>
+			<tr>
+	      <td valign="top">
+	        <div class='label top req'> <%=t("setup.description") %>: </div>
+	      </td>
+				<td>
+					<%= @setup.description %>
+				</td>
+			</tr>
+			<tr>
+	      <td valign="top">
+	        <div class='label top req'> <%=t("setup.first_candle") %>: </div>
+	      </td>
+				<td>
+					<%= Setup.descricao_tipo_candle(@setup.first_candle) %>
+				</td>
+			</tr>
+			<tr>
+	      <td valign="top">
+	        <div class='label top req'> <%=t("setup.second_candle") %>: </div>
+	      </td>
+				<td>
+					<%= Setup.descricao_tipo_candle(@setup.second_candle) %>
+				</td>
+			</tr>
+			<tr>
+	      <td valign="top">
+	        <div class='label top req'> <%=t("setup.third_candle") %>: </div>
+	      </td>
+				<td>
+					<%= Setup.descricao_tipo_candle(@setup.third_candle) %>
+				</td>
+			</tr>
+	</table>
+	<br>
+    <table width="500" cellpadding="0" cellspacing="0">
+      <tr>             
+				<th class="first">ID</th>
+				<th>Relacionamentos entre Candles</th>
+      </tr>
+     	<% @setup.setup_rels.each do |rels| -%>
+      	<tr>
+					<td><%= rels.id %></td>
+					<td>
+						<%= rels.candle_x_value %>
+						do
+					 <%= rels.candle_x_position %> candle
+						é
+						<%= rels.value %></b> que
+						<%= rels.candle_y_value %></b>
+						do
+						<%= rels.candle_y_position %> candle.
+						<br>
+					</td>
+	     	</tr>          
+			<% end -%>
+	</table>
+		<% render_chart_html 'FCF_Candlestick.swf', '', Setup.gera_xml_do_grafico(@setup, 3).to_xml, '1', 150, 110, nil%>
+</div>
+
+<%= link_to 'Editar', edit_setup_path(@setup) %> | 
+<%= link_to 'Voltar para Meus Padrões', setups_path %>
+
+<% content_for :sidebar, render(:partial => 'home/sidebar') -%>

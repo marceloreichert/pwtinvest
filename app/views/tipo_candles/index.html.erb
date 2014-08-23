@@ -1,0 +1,22 @@
+<h1>Listing tipo_candles</h1>
+
+<table>
+  <tr>
+    <th>Tipo candle</th>
+    <th>Description</th>
+  </tr>
+
+<% @tipo_candles.each do |tipo_candle| %>
+  <tr>
+    <td><%=h tipo_candle.tipo_candle %></td>
+    <td><%=h tipo_candle.description %></td>
+    <td><%= link_to 'Show', tipo_candle %></td>
+    <td><%= link_to 'Edit', edit_tipo_candle_path(tipo_candle) %></td>
+    <td><%= link_to 'Destroy', tipo_candle, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New tipo_candle', new_tipo_candle_path %>
