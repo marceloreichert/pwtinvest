@@ -16,6 +16,8 @@ gem 'yahoofinance'
 gem 'cancan'
 gem 'pg'
 
+gem 'coveralls', require: false
+
 gem 'protected_attributes'
 gem 'rails-observers'
 gem 'actionpack-page_caching'
