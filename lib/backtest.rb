@@ -5,37 +5,38 @@ module Backtest
   def backtest  (     cotacoes,
                       dt_inicial,
                       dt_final,
-                      paper,
-                      setup,
-
-                      pe1_ponto_de_entrada,
-                      pe1_valor,
-                      pe1_acima_abaixo,
-                      pe1_ponto_do_candle,
-                      pe1_qual_candle,
-
-                      ponto_stop_valor,
-                      ponto_stop_acima_abaixo,
-                      ponto_stop_ponto_do_candle,
-                      ponto_stop_lista_de_candles,
-                      quantidade_maxima_candle_trade,
-                      ponto_saida_valor,
-                      perc_perda_trade,
-                      perc_perda_geral,
-                      valor_investimento,
-                      ponto_zerar_risco_percentual,
-                      prazo,
-                      valor_corretagem,
+                      params = {},
                       mm_enabled,
-                      mm_periodos,
-                      mm_local,
-                      mm_tipo,
-                      ifr_enabled,
-                      ifr_local,
-                      ifr_periodos,
-                      ifr_valor,
-                      perda_geral_enabled
+                      ifr_enabled
                       )
+
+
+    paper                           = params[:paper]
+    setup                           = params[:setup]
+    pe1_ponto_de_entrada            = params[:pe1_ponto_de_entrada]
+    pe1_valor                       = params[:pe1_valor]
+    pe1_acima_abaixo                = params[:pe1_acima_abaixo]
+    pe1_ponto_do_candle             = params[:pe1_ponto_do_candle]
+    pe1_qual_candle                 = params[:pe1_qual_candle]
+    ponto_stop_valor                = params[:ponto_stop_valor]
+    ponto_stop_acima_abaixo         = params[:ponto_stop_acima_abaixo]
+    ponto_stop_ponto_do_candle      = params[:ponto_stop_ponto_do_candle]
+    ponto_stop_lista_de_candles     = params[:ponto_stop_lista_de_candles]
+    quantidade_maxima_candle_trade  = params[:quantidade_maxima_candle_trade]
+    ponto_saida_valor               = params[:ponto_saida_valor]
+    perc_perda_trade                = params[:perc_perda_trade]
+    perc_perda_geral                = params[:perc_perda_geral]
+    valor_investimento              = params[:valor_investimento]
+    ponto_zerar_risco_percentual    = params[:ponto_zerar_risco_percentual]
+    prazo                           = params[:prazo]
+    valor_corretagem                = params[:valor_corretagem]
+    mm_periodos                     = params[:mm_periodos]
+    mm_local                        = params[:mm_local]
+    mm_tipo                         = params[:mm_tipo]
+    ifr_local                       = params[:ifr_local]
+    ifr_periodos                    = params[:ifr_periodos]
+    ifr_valor                       = params[:ifr_valor]
+    perda_geral_enabled             = params[:perda_geral_enabled]
 
     @cotacoes = cotacoes
 

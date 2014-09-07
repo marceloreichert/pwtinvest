@@ -43,40 +43,45 @@ class BacktestsController < ApplicationController
       @retorno = Backtest.backtest( @cotacoes,
                                     data_inicial,
                                     data_final,
-                                    params[:paper],
-                                    params[:setup],
-
-                                    params[:pe1_ponto_de_entrada],
-                                    params[:pe1_valor],
-                                    params[:pe1_acima_abaixo],
-                                    params[:pe1_ponto_do_candle],
-                                    params[:pe1_qual_candle],
-
-                                    params[:ponto_stop_valor],
-                                    params[:ponto_stop_acima_abaixo],
-                                    params[:ponto_stop_ponto_do_candle],
-                                    params[:ponto_stop_lista_de_candles],
-
-                                    params[:quantidade_maxima_candle_trade],
-
-                                    params[:ponto_saida_valor],
-
-                                    params[:perc_perda_trade],
-                                    params[:perc_perda_geral],
-                                    params[:valor_investimento],
-                                    params[:ponto_zerar_risco_percentual],
-                                    params[:prazo],
-                                    params[:valor_corretagem],
+                                    params,
                                     false,
-                                    params[:mm_periodos],
-                                    params[:mm_local],
-                                    params[:mm_tipo],
-                                    false,
-                                    params[:ifr_local],
-                                    params[:ifr_periodos],
-                                    params[:ifr_valor],
-                                    params[:perda_geral_enabled]
-                                    )
+                                    false )
+
+
+
+#                                    @retorno = Backtest.backtest( @cotacoes,
+#                                                                  data_inicial,
+#                                                                  data_final,
+#                                                                  params[:paper],
+#                                                                  params[:setup],
+#                                                                  params[:pe1_ponto_de_entrada],
+#                                                                  params[:pe1_valor],
+#                                                                  params[:pe1_acima_abaixo],
+#                                                                  params[:pe1_ponto_do_candle],
+#                                                                  params[:pe1_qual_candle],
+#                                                                  params[:ponto_stop_valor],
+#                                                                  params[:ponto_stop_acima_abaixo],
+#                                                                  params[:ponto_stop_ponto_do_candle],
+#                                                                  params[:ponto_stop_lista_de_candles],
+#                                                                  params[:quantidade_maxima_candle_trade],
+#                                                                  params[:ponto_saida_valor],
+#                                                                  params[:perc_perda_trade],
+#                                                                  params[:perc_perda_geral],
+#                                                                  params[:valor_investimento],
+#                                                                  params[:ponto_zerar_risco_percentual],
+#                                                                  params[:prazo],
+###                                                                  params[:valor_corretagem],
+#                                                                  false,
+#                                                                  params[:mm_periodos],
+##                                                                  params[:mm_local],
+#                                                                  params[:mm_tipo],
+#                                                                  false,
+#                                                                  params[:ifr_local],
+#                                                                  params[:ifr_periodos],
+#                                                                  params[:ifr_valor],
+#                                                                  params[:perda_geral_enabled]
+#                                                                  )
+
       if not @retorno.nil?
         @totais = @retorno[:totais]
       end
