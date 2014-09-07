@@ -1,7 +1,7 @@
 module Import
   extend self
 
-  def importar_diario(paper)
+  def import_day(paper)
 
     quote = DailyQuotation.where("paper = ?", Paper.busca_papel(paper).symbol).order("date_quotation ASC").last
 
@@ -52,7 +52,7 @@ module Import
   end
 
 
-  def importar_semanal(paper)
+  def import_week(paper)
 
     quote = WeeklyQuotation.where("paper = ?", Paper.busca_papel(paper).symbol).order("date_quotation ASC").last
 

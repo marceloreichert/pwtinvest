@@ -1,7 +1,7 @@
-require "application_responder"
+require "app_responder"
 
 class ApplicationController < ActionController::Base
-  self.responder = ApplicationResponder
+  self.responder = AppResponder
   respond_to :html
   protect_from_forgery
 end

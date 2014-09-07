@@ -4,6 +4,7 @@ ruby '2.1.2'
 gem 'rails', '4.1.5'
 
 gem 'newrelic_rpm'
+gem 'responders'
 
 gem 'uglifier'
 gem 'sass-rails', '4.0.3'

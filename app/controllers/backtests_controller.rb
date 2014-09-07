@@ -31,11 +31,11 @@ class BacktestsController < ApplicationController
     data_final = Date.new(params[:datafinal][:year].to_i, params[:datafinal][:month].to_i, params[:datafinal][:day].to_i)
 
     if params[:prazo].downcase == 'diario'
-      Import.importar_diario(params[:paper][:id])
+      Import.import_day(params[:paper][:id])
       @cotacoes = DailyQuotation.where("paper = ? and date_quotation between ? and ?", Paper.busca_papel(params[:paper][:id]).symbol, data_inicial, data_final).order("date_quotation ASC")
 
     elsif params[:prazo].downcase == 'semanal'
-      Import.importar_semanal(params[:paper][:id])
+      Import.import_week(params[:paper][:id])
       @cotacoes = WeeklyQuotation.find_all_by_paper(Paper.busca_papel(params[:paper][:id]).symbol, :conditions => ["date_quotation between ? and ?", data_inicial, data_final], :order => "date_quotation ASC")
     end
 
