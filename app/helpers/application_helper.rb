@@ -1,14 +1,5 @@
 module ApplicationHelper
   include FusionChartsHelper
-  
-  def tabs(tabs = FatFreeCRM::Tabs.main)
-    if tabs
-      @current_tab ||= tabs.first[:text] # Select first tab by default.
-      tabs.each { |tab| tab[:active] = (@current_tab == tab[:text] || @current_tab == tab[:url][:controller]) }
-    else
-      raise FatFreeCRM::MissingSettings, "Tab settings are missing, please run <b>rake crm:setup</b> command."
-    end
-  end
 
   #----------------------------------------------------------------------------
   def tabless_layout?
@@ -35,21 +26,6 @@ module ApplicationHelper
        :url => url_for(:controller => :home, :action => :toggle, :id => id),
         :before => "crm.flip_subtitle(this)"
       ), :class => "subtitle")
-  end
-
-  #----------------------------------------------------------------------------
-  def section(related, assets)
-    asset = assets.to_s.singularize
-    create_id  = :"create_#{asset}"
-    select_id  = :"select_#{asset}"
-    create_url = controller.send(:"new_#{asset}_path")
-
-    html = "<br />"
-    html << content_tag(:div, link_to(t(select_id), "#", :id => select_id), :class => "subtitle_tools")
-    html << content_tag(:div, "&nbsp;|&nbsp;", :class => "subtitle_tools")
-    html << content_tag(:div, link_to_inline(create_id, create_url, :related => dom_id(related), :text=> t(create_id)), :class => "subtitle_tools")
-    html << content_tag(:div, t(assets), :class => :subtitle, :id => :"create_#{asset}_title")
-    html << content_tag(:div, "", :class => :remote, :id => create_id, :style => "display:none;")
   end
 
   #----------------------------------------------------------------------------
@@ -218,33 +194,6 @@ module ApplicationHelper
     end
   end
 
-  # Display web presence mini-icons for Contact or Lead.
-  #----------------------------------------------------------------------------
-  def web_presence_icons(person)
-    [ :blog, :linkedin, :facebook, :twitter ].inject([]) do |links, site|
-      url = person.send(site)
-      unless url.blank?
-        url = "http://" << url unless url.match(/^https?:\/\//)
-        links << link_to(image_tag("#{site}.gif", :size => "15x15"), url, :popup => true, :title => t(:open_in_window, url))
-      end
-      links
-    end.join("\n")
-  end
-
-  # Ajax helper to refresh current index page once the user selects an option.
-  #----------------------------------------------------------------------------
-  def redraw(option, value, url = nil)
-    if value.is_a?(Array)
-      param, value = value.first, value.last
-    end
-    remote_function(
-      :url       => url || send("redraw_#{controller.controller_name}_path"),
-      :with      => "{ #{option}: '#{param || value}' }",
-      :condition => "$('#{option}').innerHTML != '#{value}'",
-      :loading   => "$('#{option}').update('#{value}'); $('loading').show()",
-      :complete  => "$('loading').hide()"
-    )
-  end
 
   #----------------------------------------------------------------------------
   def options_menu_item(option, key, url = nil)
@@ -306,25 +255,6 @@ module ApplicationHelper
     "#{request.protocol + request.host_with_port}" + Setting.base_url.to_s + "/images/avatar.jpg"
   end
 
-  # Returns default permissions intro.
-  #----------------------------------------------------------------------------
-  def get_default_permissions_intro(access, text)
-    case access
-      when "Private" then t(:permissions_intro_private, text)
-      when "Public"  then t(:permissions_intro_public,  text)
-      when "Shared"  then t(:permissions_intro_shared,  text)
-    end
-  end
-
-  # Returns default permissions intro
-  #----------------------------------------------------------------------------
-  def get_default_permissions_intro(access, text)
-    case access
-      when "Private" then t(:permissions_intro_private, text)
-      when "Public" then t(:permissions_intro_public, text)
-      when "Shared" then t(:permissions_intro_shared, text)
-    end
-  end  
 
   # Render a text field that is part of compound address.
   #----------------------------------------------------------------------------

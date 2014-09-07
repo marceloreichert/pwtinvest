@@ -10,8 +10,22 @@
 	</head>
 
 	<body>
-		<%= render 'layouts/header' %>
-    <%= render "layouts/menus" %>
+		<header class="navbar navbar-default navbar-fixed-top" role="navigation">
+		  <div class="navbar-inner">
+		    <div class="container">
+					<div class="navbar-header">
+						<%= link_to(t('comum.app'), root_path, class: "navbar-brand") %>
+		      </div>
+					<ul class="nav navbar-nav">
+						<li><%= link_to("Home", root_path) %></li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li class='active'><%= link_to t("logout", default: "Logout"), destroy_user_session_path, method: :delete %></li>
+					</ul>
+		    </div>
+		  </div>
+		</header>
+
     <%= render "layouts/tabbed" %>
 	</body>
 </html>
