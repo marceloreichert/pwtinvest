@@ -970,10 +970,10 @@ module Backtest
       if encontrei && mm_enabled
         ## Padrao ocorre ACIMA da MM
         if mm_local.upcase == 'ACIMA'
-          if candle[:valor_minima] > candle[:valor_media] || candle[:valor_media] == 0
+          if candle[:low] > candle[:valor_media] || candle[:valor_media] == 0
             encontrei = true
           else
-            historico = "Candle do dia " << candle[:data].strftime("%d/%m/%Y") << "  nao esta ACIMA da media movel. Valor da minima (" << candle[:valor_minima].to_s << ") e menor que valor da media movel (" << candle[:valor_media].to_s << ")."
+            historico = "Candle do dia " << candle[:date_quotation].strftime("%d/%m/%Y") << " nao esta ACIMA da media movel. Valor da minima menor que valor da media movel."
             encontrei = false
             break
           end
@@ -981,10 +981,10 @@ module Backtest
 
         ## Padrao ocorre ABAIXO da MM
         if mm_local.upcase == 'ABAIXO'
-          if candle[:valor_maxima] < candle[:valor_media] || candle[:valor_media] == 0
+          if candle[:high] < candle[:valor_media] || candle[:valor_media] == 0
             encontrei = true
           else
-            historico = "Valor da maxima (" << candle[:valor_maxima].to_s << ") do dia " << candle[:data].to_s << " esta abaixo do valor da media (" << candle[:valor_media].to_s << ")."
+            historico = "Valor da maxima (" << candle[:high].to_s << ") do dia " << candle[:date_quotation].to_s << " esta abaixo do valor da media (" << candle[:valor_media].to_s << ")."
             encontrei = false
             break
           end
@@ -994,10 +994,10 @@ module Backtest
         if mm_local.upcase == 'SOBRE'
           if candle[:valor_media] == 0
             encontrei = true
-          elsif candle[:valor_minima] < candle[:valor_media] && candle[:valor_maxima] > candle[:valor_media]
+          elsif candle[:low] < candle[:valor_media] && candle[:high] > candle[:valor_media]
             encontrei = true
           else
-            historico = "Media movel (" << candle[:valor_media].to_s << ") nao esta passando sobre o candle do dia " << candle[:data].strftime("%d/%m/%Y") << ", onde a maxima e " << candle[:valor_maxima].to_s << " e a minima e " << candle[:valor_minima].to_s << "."
+            historico = "Media movel (" << candle[:valor_media].to_s << ") nao esta passando sobre o candle do dia " << candle[:date_quotation].strftime("%d/%m/%Y") << ", onde a maxima e " << candle[:high].to_s << " e a minima e " << candle[:low].to_s << "."
             encontrei = false
             break
           end

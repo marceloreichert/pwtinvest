@@ -167,4 +167,134 @@ describe Backtest, :type => :model do
     expect(ret).to eq 7.99
   end
 
+  it 'valida_media_movel - nao deve validar' do
+    candles_do_padrao = []
+    candles_do_padrao << {:date_quotation => Date.new(2012,3,11),
+                          :open => 20,
+                          :close => 10,
+                          :low => 8,
+                          :high => 23,
+                          :valor_ifr => 0,
+                          :valor_media => 100
+                          }
+    candles_do_padrao << {:date_quotation => Date.new(2012,3,12),
+                          :open => 12,
+                          :close => 18,
+                          :low => 8,
+                          :high => 22,
+                          :valor_ifr => 0,
+                          :valor_media => 100
+                          }
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, false, 'acima')
+    expect(ret[:encontrei]).to eq true
+    expect(ret[:historico]).to eq ''
+
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, false, 'abaixo')
+    expect(ret[:encontrei]).to eq true
+    expect(ret[:historico]).to eq ''
+
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, false, 'sobre')
+    expect(ret[:encontrei]).to eq true
+    expect(ret[:historico]).to eq ''
+
+  end
+
+  it 'valida_media_movel quando media for zero' do
+    candles_do_padrao = []
+    candles_do_padrao << {:date_quotation => Date.new(2012,3,11),
+                          :open => 20,
+                          :close => 10,
+                          :low => 8,
+                          :high => 23,
+                          :valor_ifr => 0,
+                          :valor_media => 0
+                          }
+    candles_do_padrao << {:date_quotation => Date.new(2012,3,12),
+                          :open => 12,
+                          :close => 18,
+                          :low => 8,
+                          :high => 22,
+                          :valor_ifr => 0,
+                          :valor_media => 0
+                          }
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'acima')
+    expect(ret[:encontrei]).to eq true
+    expect(ret[:historico]).to eq ''
+
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'abaixo')
+    expect(ret[:encontrei]).to eq true
+    expect(ret[:historico]).to eq ''
+
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'sobre')
+    expect(ret[:encontrei]).to eq true
+    expect(ret[:historico]).to eq ''
+
+  end
+
+
+  it 'valida_media_movel - quando media for acima do padrao' do
+    candles_do_padrao = []
+    candles_do_padrao << {:date_quotation => Date.new(2012,3,11),
+                          :open => 20,
+                          :close => 10,
+                          :low => 8,
+                          :high => 23,
+                          :valor_ifr => 0,
+                          :valor_media => 100
+                          }
+    candles_do_padrao << {:date_quotation => Date.new(2012,3,12),
+                          :open => 12,
+                          :close => 18,
+                          :low => 8,
+                          :high => 22,
+                          :valor_ifr => 0,
+                          :valor_media => 100
+                          }
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'acima')
+    expect(ret[:encontrei]).to eq false
+    expect(ret[:historico]).not_to eq ''
+
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'abaixo')
+    expect(ret[:encontrei]).to eq true
+    expect(ret[:historico]).to eq ''
+
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'sobre')
+    expect(ret[:encontrei]).to eq false
+    expect(ret[:historico]).not_to eq ''
+
+  end
+
+  it 'valida_media_movel - quando media for abaixo do padrao' do
+    candles_do_padrao = []
+    candles_do_padrao << {:date_quotation => Date.new(2012,3,11),
+                          :open => 20,
+                          :close => 10,
+                          :low => 8,
+                          :high => 23,
+                          :valor_ifr => 0,
+                          :valor_media => 1
+                          }
+    candles_do_padrao << {:date_quotation => Date.new(2012,3,12),
+                          :open => 12,
+                          :close => 18,
+                          :low => 8,
+                          :high => 22,
+                          :valor_ifr => 0,
+                          :valor_media => 1
+                          }
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'acima')
+    expect(ret[:encontrei]).to eq true
+    expect(ret[:historico]).to eq ''
+
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'abaixo')
+    expect(ret[:encontrei]).to eq false
+    expect(ret[:historico]).not_to eq ''
+
+    ret = Backtest.valida_media_movel(candles_do_padrao, setup = {id: 1}, true, 'sobre')
+    expect(ret[:encontrei]).to eq false
+    expect(ret[:historico]).not_to eq ''
+
+  end
+
+
 end
