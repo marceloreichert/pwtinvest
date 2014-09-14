@@ -1,32 +1,42 @@
-require 'test_helper'
+require 'rails_helper'
 
-class BacktestTest < ActiveSupport::TestCase
-  test "Existe relacionamento entre candles" do
-    ret = Backtest.lista_relacionamentos_entre_candles(1)
-    assert ret.count > 0, 'Nao retornou linhas de relacionamento entre candles.'
+describe Backtest, :type => :model do
 
-    ret = Backtest.lista_relacionamentos_entre_candles(0)
-    assert ret.count == 0, 'Nao retornou linhas de relacionamento entre candles.'
+  before(:each) do
+    create(:setup, id: 1, setup: 'Harami de Alta', description: 'Harami de Alta', quantity_candle: 2, first_candle: 'B', second_candle: 'A', third_candle: 'N')
+    create(:setup, id: 2, setup: 'Martelo de Alta', description: 'Martelo de Alta', quantity_candle: 1, first_candle: 'A', second_candle: 'N', third_candle: 'N' )
+    create(:setup, id: 3, setup: 'Teste', description: 'Teste', quantity_candle: 3, first_candle: 'A', second_candle: 'A', third_candle: 'A' )
+
+    create(:setup_rel, id: 1, setup_id: 1, candle_x_value: 'abertura', candle_x_position: 'primeiro', value: 'maior', candle_y_value: 'fechamento', candle_y_position: 'segundo' )
+    create(:setup_rel, id: 2, setup_id: 1, candle_x_value: 'fechamento', candle_x_position: 'primeiro', value: 'menor', candle_y_value: 'abertura', candle_y_position: 'segundo' )
   end
 
-  test "insere_lancamentos_no_extrato" do
+  it "Existe relacionamento entre candles" do
+    ret = Backtest.lista_relacionamentos_entre_candles(1)
+    expect(ret.count).to eq 2
+
+    ret = Backtest.lista_relacionamentos_entre_candles(0)
+    expect(ret.count).to eq 0
+  end
+
+  it "insere_lancamentos_no_extrato" do
     #insere_lancamentos_no_extrato(data, valor, tipo, id, saldo)
     ret = Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'I', 0, 0, 0, 0)
-    assert !ret.nil?, 'Deveria inserir dados no extrato.'
+    expect(ret).to be
 
     ret = Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'I', 0, 0, 0, 0)
-    assert ret.count == 8, 'Deveriam ter 8 hashs'
+    expect(ret.count).to eq 8
 
     ret = []
     ret << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'I', 0, 0, 0, 0)
-    assert ret.count == 1, 'Deveria ter 1 registro. '
+    expect(ret.count).to eq 1
     ret << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'C', 0, 0, 0, 0)
-    assert ret.count == 2, 'Deveriam ter 2 registros.'
+    expect(ret.count).to eq 2
     ret << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
-    assert ret.count == 3, 'Deveriam ter 3 registros.'
+    expect(ret.count).to eq 3
   end
 
-  test "atualiza_nr_lancamento_no_extrato" do
+  it "atualiza_nr_lancamento_no_extrato" do
     ret = []
     ret   << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
     ret   << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
@@ -37,62 +47,17 @@ class BacktestTest < ActiveSupport::TestCase
 
     ret = Backtest.atualiza_nr_lancamento_no_extrato(ret)
 
-    assert  ret.count == 6, 'Total de linhas deveria ser ' << ret.count.to_s
-    assert  ret[0][:lancamento] == 1, 'Numero do lancamento deveria ser 1.'
-    assert  ret[1][:lancamento] == 2, 'Numero do lancamento deveria ser 2.'
-    assert  ret[2][:lancamento] == 3, 'Numero do lancamento deveria ser 3.'
-    assert  ret[3][:lancamento] == 4, 'Numero do lancamento deveria ser 4.'
-    assert  ret[4][:lancamento] == 5, 'Numero do lancamento deveria ser 5.'
-    assert  ret[5][:lancamento] == 6, 'Numero do lancamento deveria ser 6.'
+    expect(ret.count).to eq 6
+    expect(ret[0][:lancamento]).to eq 1
+    expect(ret[1][:lancamento]).to eq 2
+    expect(ret[2][:lancamento]).to eq 3
+    expect(ret[3][:lancamento]).to eq 4
+    expect(ret[4][:lancamento]).to eq 5
+    expect(ret[5][:lancamento]).to eq 6
 
   end
 
-  test "encontrar_padroes_de_candles_do_setup" do
-    #encontrar_padroes_de_candles_do_setup(cotacoes, indice, setup_id, quantidade_maxima_candles_do_trade)
-    assert  true
-  end
-
-  test "valida_media_movel" do
-    assert  true
-  end
-
-  test "valida_ifr" do
-    assert  true
-  end
-
-  test "valida_relacao_entre_candles" do
-    assert  true
-  end
-
-  test "valida_padrao" do
-    assert  true
-  end
-
-  test "verifica_padrao" do
-    assert  true
-  end
-
-  test "calcula_totais" do
-    assert  true
-  end
-
-  test "calcula_ifr" do
-    assert  true
-  end
-
-  test "calcula_media_movel_exponencial" do
-    assert  true
-  end
-
-  test "calcula_media_movel_simples" do
-    assert  true
-  end
-
-  test "gera_xml_do_grafico" do
-    assert  true
-  end
-
-  test "identifica_valor_ponto_de_entrada" do
+  it "identifica_valor_ponto_de_entrada" do
     #identifica_valor_ponto_de_entrada(pe1_valor, pe1_acima_abaixo, pe1_ponto_do_candle, pe1_lista_de_candles, candles)
     candles_do_padrao = []
     candles_do_padrao << {:date_quotation => '2000-01-13',
@@ -118,69 +83,63 @@ class BacktestTest < ActiveSupport::TestCase
                           :valor_media => 0  }
 
     valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','high','2', candles_do_padrao)
-    assert valor_de_entrada == 110.51, 'O ponto de entrada deveria ser 110.51 e retornou ' << valor_de_entrada.to_s
+    expect(valor_de_entrada).to eq 110.51
 
     valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','low','2', candles_do_padrao)
-    assert valor_de_entrada == 106.01, 'O ponto de entrada deveria ser 106.01 e retornou ' << valor_de_entrada.to_s
+    expect(valor_de_entrada).to eq 106.01
 
     valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','close','2', candles_do_padrao)
-    assert valor_de_entrada == 108.01, 'O ponto de entrada deveria ser 108.01 e retornou ' << valor_de_entrada.to_s
+    expect(valor_de_entrada).to eq 108.01
 
     valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','open','2', candles_do_padrao)
-    assert valor_de_entrada == 107.51, 'O ponto de entrada deveria ser 107.51 e retornou ' << valor_de_entrada.to_s
+    expect(valor_de_entrada).to eq 107.51
 
     valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','high','1', candles_do_padrao)
-    assert valor_de_entrada == 112.51, 'O ponto de entrada deveria ser 112.51 e retornou ' << valor_de_entrada.to_s
+    expect(valor_de_entrada).to eq 112.51
 
     valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'abaixo','high','3', candles_do_padrao)
-    assert valor_de_entrada == 11.49, 'O ponto de entrada deveria ser 11.49 e retornou ' << valor_de_entrada.to_s
+    expect(valor_de_entrada).to eq 11.49
 
   end
 
-  test "carrega_lista_ponto_do_candle" do
+  it "carrega_lista_ponto_do_candle" do
     #[['da maxima','high'], ['da minima','low'], ['da abertura','open'], ['do fechamento','close']]
     ponto_do_candle = Backtest.carrega_lista_ponto_do_candle
-    assert  !ponto_do_candle.empty?, 'Lista esta vazia.'
-    assert  ponto_do_candle[0][0] == 'da maxima', 'Deveria retornar <da maxima>'
-    assert  ponto_do_candle[1][0] == 'da minima', 'Deveria retornar <da minima>'
-    assert  ponto_do_candle[2][0] == 'da abertura', 'Deveria retornar <da abertura>'
-    assert  ponto_do_candle[3][0] == 'do fechamento', 'Deveria retornar <do fechamento>'
-    assert  ponto_do_candle[0][1] == 'high', 'Deveria retornar <high>'
-    assert  ponto_do_candle[1][1] == 'low', 'Deveria retornar <low>'
-    assert  ponto_do_candle[2][1] == 'open', 'Deveria retornar <open>'
-    assert  ponto_do_candle[3][1] == 'close', 'Deveria retornar <close>'
+    expect(ponto_do_candle).to be
+    expect(ponto_do_candle[0][0]).to eq 'da maxima'
+    expect(ponto_do_candle[1][0]).to eq 'da minima'
+    expect(ponto_do_candle[2][0]).to eq 'da abertura'
+    expect(ponto_do_candle[3][0]).to eq 'do fechamento'
+    expect(ponto_do_candle[0][1]).to eq 'high'
+    expect(ponto_do_candle[1][1]).to eq 'low'
+    expect(ponto_do_candle[2][1]).to eq 'open'
+    expect(ponto_do_candle[3][1]).to eq 'close'
   end
 
-  test "carrega_lista_acima_abaixo" do
+  it  "carrega_lista_acima_abaixo" do
     ret = Backtest.carrega_lista_acima_abaixo
-    assert  ret[0][0] ==  "acima"
-    assert  ret[0][1] ==  "acima"
-    assert  ret[1][0] ==  "abaixo"
-    assert  ret[1][1] ==  "abaixo"
+    expect(ret[0][0]).to eq "acima"
+    expect(ret[0][1]).to eq "acima"
+    expect(ret[1][1]).to eq "abaixo"
+    expect(ret[1][1]).to eq "abaixo"
   end
 
-  test "carrega_lista_ponto_de_entrada" do
+  it "carrega_lista_ponto_de_entrada" do
     ret = Backtest.carrega_lista_ponto_de_entrada
-    assert  ret[0][0] ==  "Ao atingir"
-    assert  ret[0][1] ==  "ao_atingir"
-    assert  ret[1][0] ==  "Ao fechar"
-    assert  ret[1][1] ==  "ao_fechar"
-
-
+    expect(ret[0][0]).to eq "Ao atingir"
+    expect(ret[0][1]).to eq "ao_atingir"
+    expect(ret[1][0]).to eq "Ao fechar"
+    expect(ret[1][1]).to eq "ao_fechar"
   end
 
-  test "identifica_dados_do_proximo_candle_apos_padrao" do
-    assert  true
-  end
-
-  test "identifica_valor_ponto_de_saida" do
+  it "identifica_valor_ponto_de_saida" do
     ret = Backtest.identifica_valor_ponto_de_saida(10, 10)
-    assert  ret == 11, 'Retornou ' << ret.to_s << '. Correto = 11'
+    expect(ret).to eq 11
     ret = Backtest.identifica_valor_ponto_de_saida(20, 2)
-    assert  ret == 20.4, 'Retornou ' << ret.to_s << '. Correto = 20.40'
+    expect(ret).to eq 20.4
   end
 
-  test "identifica_valor_ponto_de_stop" do
+  it "identifica_valor_ponto_de_stop" do
   #  def identifica_valor_ponto_de_stop(pstop1, pstop2, pstop3, pstop4, candles_do_padrao)
     candles_do_padrao = []
     candles_do_padrao << {:date_quotation => Date.new(2012,3,11),
@@ -201,11 +160,11 @@ class BacktestTest < ActiveSupport::TestCase
                           }
 
     ret = Backtest.identifica_valor_ponto_de_stop(0.01, 'acima', 'maxima', '2', candles_do_padrao)
-    assert ret == 22.01, 'Retornou ' << ret.to_s << ', correto seria 22.01'
+    expect(ret).to eq 22.01
     ret = Backtest.identifica_valor_ponto_de_stop(0.01, 'acima', 'maxima', '1', candles_do_padrao)
-    assert ret == 23.01, 'Retornou ' << ret.to_s << ', correto seria 23.01'
+    expect(ret).to eq 23.01
     ret = Backtest.identifica_valor_ponto_de_stop(0.01, 'abaixo', 'minima', '1', candles_do_padrao)
-    assert ret == 7.99, 'Retornou ' << ret.to_s << ', correto seria 7.99'
+    expect(ret).to eq 7.99
   end
 
 end

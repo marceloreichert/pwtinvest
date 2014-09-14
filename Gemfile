@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 ruby '2.1.2'
 
-gem 'rails', '4.1.5'
+gem 'rails', '4.1.6'
 
 gem 'newrelic_rpm'
 gem 'responders'
@@ -39,4 +39,5 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'capybara'
+  gem 'factory_girl_rails'
 end
