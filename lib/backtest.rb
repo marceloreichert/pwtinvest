@@ -792,15 +792,6 @@ module Backtest
         end
       end
 
-      #Verifica o IFR dos candles do padrao
-      if status.nil? && ifr_enabled
-        retorno = valida_ifr( trade[:candles_do_padrao], setup, ifr_local, ifr_valor)
-        if not retorno[:encontrei]
-          status = "VALIDADO/NAO COMPRADO"
-          historico = retorno[:historico]
-        end
-      end
-
       if status.nil? && mm_enabled
         retorno = valida_media_movel(trade[:candles_do_padrao], setup, mm_enabled, mm_local)
         if not retorno[:encontrei]
@@ -926,87 +917,22 @@ module Backtest
   end
 
 
-  def valida_ifr(candles_do_padrao, setup, ifr_local, ifr_valor)
-
-    setup = Setup.busca_setup(setup[:id])
-
-    candles_do_padrao.each do |candle|
-
-      if ifr_local.upcase == "ABAIXO"
-        if candle[:valor_ifr].to_f > ifr_valor.to_f
-          retorno = { :encontrei => false,
-                      :historico => "Candle do dia " << candle[:data].strftime("%d/%m/%Y") << " apresenta um IFR de " << candle[:valor_ifr].to_s << " maior que " << ifr_valor.to_s << ". "          }
-          return retorno
-        end
-      end
-
-      if ifr_local.upcase == "ACIMA"
-        if candle[:valor_ifr].to_f < ifr_valor.to_f
-          retorno = {
-            :encontrei => false,
-            :historico => "Candle do dia " << candle[:data].strftime("%d/%m/%Y") << " apresenta um IFR de " << candle[:valor_ifr].to_s << " menor que " << ifr_valor.to_s << ". "
-          }
-          return retorno
-        end
-      end
-    end
-    retorno = {
-      :encontrei => true,
-      :historico => ""
-    }
-    return retorno
-  end
-
-
   def valida_media_movel(candles_do_padrao, setup, mm_enabled, mm_local)
-
+  ## TESTED
     setup = Setup.busca_setup(setup[:id])
 
-    encontrei = true
+    ok = true
     historico = ""
 
     candles_do_padrao.each do |candle|
 
-      if encontrei && mm_enabled
-        ## Padrao ocorre ACIMA da MM
-        if mm_local.upcase == 'ACIMA'
-          if candle[:low] > candle[:valor_media] || candle[:valor_media] == 0
-            encontrei = true
-          else
-            historico = "Candle do dia " << candle[:date_quotation].strftime("%d/%m/%Y") << " nao esta ACIMA da media movel. Valor da minima menor que valor da media movel."
-            encontrei = false
-            break
-          end
-        end
-
-        ## Padrao ocorre ABAIXO da MM
-        if mm_local.upcase == 'ABAIXO'
-          if candle[:high] < candle[:valor_media] || candle[:valor_media] == 0
-            encontrei = true
-          else
-            historico = "Valor da maxima (" << candle[:high].to_s << ") do dia " << candle[:date_quotation].to_s << " esta abaixo do valor da media (" << candle[:valor_media].to_s << ")."
-            encontrei = false
-            break
-          end
-        end
-
-        ## Padrao ocorre SOBRE a MM
-        if mm_local.upcase == 'SOBRE'
-          if candle[:valor_media] == 0
-            encontrei = true
-          elsif candle[:low] < candle[:valor_media] && candle[:high] > candle[:valor_media]
-            encontrei = true
-          else
-            historico = "Media movel (" << candle[:valor_media].to_s << ") nao esta passando sobre o candle do dia " << candle[:date_quotation].strftime("%d/%m/%Y") << ", onde a maxima e " << candle[:high].to_s << " e a minima e " << candle[:low].to_s << "."
-            encontrei = false
-            break
-          end
-        end
+      if ok && mm_enabled
+        historico = valid(mm_local, candle)
+        ok = historico.empty? ? true : false
       end
     end
-    retorno = { :encontrei => encontrei,
-                :historico => historico }
-    return retorno
+
+    return { encontrei: ok, historico: historico }
   end
 
 
@@ -1239,6 +1165,29 @@ module Backtest
 
   def carrega_lista_ponto_de_entrada
     ret = [['Ao atingir','ao_atingir'],['Ao fechar','ao_fechar']]
+  end
+
+
+  private
+
+  def valid(type, options={})
+    if type.upcase == 'ACIMA'
+      if options[:low] <= options[:valor_media] && options[:valor_media] > 0
+        return "Candle do dia " << options[:date_quotation].strftime("%d/%m/%Y") << " nao esta ACIMA da media movel."
+      end
+
+    elsif type.upcase == 'ABAIXO'
+      if options[:high] >= options[:valor_media] && options[:valor_media] > 0
+        return "Candle do dia " << options[:date_quotation].strftime("%d/%m/%Y") << " nao esta ACIMA da media movel."
+      end
+
+    elsif type.upcase == 'SOBRE'
+      if options[:valor_media] > 0 && (options[:low] > options[:valor_media] || options[:high] < options[:valor_media])
+        return "Candle do dia " << options[:date_quotation].strftime("%d/%m/%Y") << " nao esta SOBRE da media movel."
+      end
+    end
+
+    return ''
   end
 
 end
