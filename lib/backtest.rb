@@ -2,13 +2,9 @@ module Backtest
   include ActionView::Helpers::NumberHelper
   extend self
 
-  def backtest  (     cotacoes,
-                      dt_inicial,
-                      dt_final,
-                      params = {},
+  def backtest  (     ticks,
                       mm_enabled,
-                      ifr_enabled
-                      )
+                      params = {} )
 
 
     paper                           = params[:paper]
@@ -38,18 +34,14 @@ module Backtest
     ifr_valor                       = params[:ifr_valor]
     perda_geral_enabled             = params[:perda_geral_enabled]
 
-    @cotacoes = cotacoes
+    @ticks = ticks
 
     if mm_enabled
       if mm_tipo.downcase == "simples"
-        calcula_media_movel_simples(@cotacoes, mm_periodos.to_i, 1)
+        calcula_media_movel_simples(@ticks, mm_periodos.to_i, 1)
       elsif mm_tipo.downcase == "exponencial"
-        calcula_media_movel_exponencial(@cotacoes, mm_periodos.to_i, 1)
+        calcula_media_movel_exponencial(@ticks, mm_periodos.to_i, 1)
       end
-    end
-
-    if ifr_enabled
-      self.calcula_ifr(@cotacoes, ifr_periodos.to_i)
     end
 
     @resumo_por_trade = []
@@ -64,13 +56,13 @@ module Backtest
 
     indice = 0
 
-    @cotacoes.each do |cot|
+    @ticks.each do |tick|
 
-      verifica_padrao(@cotacoes,
+      verifica_padrao(@ticks,
                       indice,
                       setup,
-                      cot.id,
-                      cot.date_quotation,
+                      tick.id,
+                      tick.date_quotation,
                       valor_perda_trade,
                       valor_perda_geral,
                       pe1_ponto_de_entrada,
@@ -91,7 +83,7 @@ module Backtest
 
         if t[:status] == "ENCONTRADO"
           retorno = valida_padrao(t,
-                                  cot.date_quotation,
+                                  tick.date_quotation,
                                   ponto_zerar_risco_percentual,
                                   valor_perda_trade,
                                   valor_perda_geral,
@@ -125,7 +117,7 @@ module Backtest
           if t[:numero_trades] < quantidade_maxima_candle_trade.to_i
 
             #Verifica se foi ESTOPADO
-            if cot.low < t[:valor_ponto_stop]
+            if tick.low < t[:valor_ponto_stop]
 
               valor_total_venda = t[:valor_ponto_stop] * t[:lotes_a_vender]
               valor_total_venda = valor_total_venda - valor_corretagem.to_f
@@ -140,10 +132,10 @@ module Backtest
               t[:valor_total_em_aberto] = t[:valor_total_em_aberto] - valor_total_venda
               t[:valor_total_venda] = t[:valor_total_venda] + valor_total_venda
 
-              @extrato << Backtest.insere_lancamentos_no_extrato(cot.date_quotation, valor_total_venda, "V", t[:id], @saldo, t[:risco_do_trade], @risco_acumulado)
+              @extrato << Backtest.insere_lancamentos_no_extrato(tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, t[:risco_do_trade], @risco_acumulado)
 
               historico = "Candle do dia "
-              historico << cot.date_quotation.strftime("%d/%m/%Y")
+              historico << tick.date_quotation.strftime("%d/%m/%Y")
               historico << " atingiu o Ponto de Stop Loss em "
               historico << number_to_currency(t[:valor_ponto_stop]) + ". "
               historico << "Vendidos " + t[:lotes_a_vender].to_s + " lotes com retorno de "
@@ -154,7 +146,7 @@ module Backtest
 
             #Verifica VENDA para ZERAR RISCO
             if t[:valor_ponto_zerar_risco] > 0 && t[:lotes_a_vender] > 0
-              if cot.high >= t[:valor_ponto_zerar_risco]
+              if tick.high >= t[:valor_ponto_zerar_risco]
 
                 lote_zerar_risco = lote_zerar_risco.to_i
                 t[:lotes_a_vender] = t[:lotes_a_vender] - t[:lote_zerar_risco]
@@ -171,9 +163,9 @@ module Backtest
                 t[:valor_total_em_aberto] = t[:valor_total_em_aberto] - valor_total_venda
                 t[:valor_total_venda] = t[:valor_total_venda] + valor_total_venda
 
-                @extrato << Backtest.insere_lancamentos_no_extrato(cot.date_quotation, valor_total_venda, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
+                @extrato << Backtest.insere_lancamentos_no_extrato(tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
 
-                historico = "Candle do dia " + cot.date_quotation.strftime("%d/%m/%Y")
+                historico = "Candle do dia " + tick.date_quotation.strftime("%d/%m/%Y")
                 historico << " atingiu o Ponto de Zerar Risco em "
                 historico << number_to_currency(t[:valor_ponto_zerar_risco]) + ". "
                 historico << "Vendidos " + number_to_currency(t[:lote_zerar_risco]) + " lotes com retorno de "
@@ -185,7 +177,7 @@ module Backtest
             end
 
             #Verifica se foi VENDIDO
-            if cot.high >= t[:valor_ponto_venda]
+            if tick.high >= t[:valor_ponto_venda]
 
               valor_total_venda = t[:valor_ponto_venda] * t[:lotes_a_vender]
               valor_total_venda = valor_total_venda - valor_corretagem.to_f
@@ -203,9 +195,9 @@ module Backtest
                 historico1 = "VENDA "
               end
 
-              @extrato << Backtest.insere_lancamentos_no_extrato(cot.date_quotation, valor_total_venda, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
+              @extrato << Backtest.insere_lancamentos_no_extrato(tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
 
-              historico = "Candle do dia " + cot.date_quotation.strftime("%d/%m/%Y")
+              historico = "Candle do dia " + tick.date_quotation.strftime("%d/%m/%Y")
               historico << " atingiu o Ponto de Saida em "
               historico << t[:valor_ponto_venda].to_s + ". "
               historico << "Vendidos " + t[:lotes_a_vender].to_s + " lotes com retorno de "
@@ -220,7 +212,7 @@ module Backtest
           else
 
             if t[:status] == "VALIDADO"
-              valor_saida = cot.close * t[:lotes_a_vender]
+              valor_saida = tick.close * t[:lotes_a_vender]
               valor_saida = valor_saida - valor_corretagem.to_f
 
               @saldo = @saldo + valor_saida
@@ -236,15 +228,15 @@ module Backtest
                 @risco_acumulado = @risco_acumulado - risco_do_trade
               end
 
-              @extrato << Backtest.insere_lancamentos_no_extrato(cot.date_quotation, valor_saida, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
+              @extrato << Backtest.insere_lancamentos_no_extrato(tick.date_quotation, valor_saida, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
 
               historico = "Ponto de Saida ou Stop Loss nao atingidos. "
               historico << "Vendidos " + t[:lotes_a_vender].to_s + " lotes "
               historico << "no fechamento do ultimo candle do trade, "
               historico << "no dia "
-              historico << cot.date_quotation.strftime("%d/%m/%Y")
+              historico << tick.date_quotation.strftime("%d/%m/%Y")
               historico << ", por "
-              historico << cot.close.to_s
+              historico << tick.close.to_s
               historico << " com retorno de "
               historico << valor_saida.to_s
               t[:historico] << {:title => historico1, :description => historico }
@@ -258,8 +250,6 @@ module Backtest
       end
       indice = indice + 1
     end
-
-#    Rails.logger.info(@resumo_por_trade[0])
 
     @extrato  = Backtest.atualiza_nr_lancamento_no_extrato(@extrato)
     @totais = calcula_totais()

@@ -27,66 +27,28 @@ class BacktestsController < ApplicationController
 
     ultima_data = Date.new(2000, 1, 1)
 
-    data_inicial = Date.new(params[:datainicial][:year].to_i, params[:datainicial][:month].to_i, params[:datainicial][:day].to_i)
-    data_final = Date.new(params[:datafinal][:year].to_i, params[:datafinal][:month].to_i, params[:datafinal][:day].to_i)
+    date_ini = Date.new(params[:datainicial][:year].to_i, params[:datainicial][:month].to_i, params[:datainicial][:day].to_i)
+    dete_end = Date.new(params[:datafinal][:year].to_i, params[:datafinal][:month].to_i, params[:datafinal][:day].to_i)
 
     if params[:prazo].downcase == 'diario'
       Import.import_day(params[:paper][:id])
-      @cotacoes = DailyQuotation.where("paper = ? and date_quotation between ? and ?", Paper.busca_papel(params[:paper][:id]).symbol, data_inicial, data_final).order("date_quotation ASC")
+      @ticks = DailyQuotation.where("paper = ? and date_quotation between ? and ?", Paper.busca_papel(params[:paper][:id]).symbol, date_ini, date_end).order("date_quotation ASC")
 
     elsif params[:prazo].downcase == 'semanal'
       Import.import_week(params[:paper][:id])
-      @cotacoes = WeeklyQuotation.find_all_by_paper(Paper.busca_papel(params[:paper][:id]).symbol, :conditions => ["date_quotation between ? and ?", data_inicial, data_final], :order => "date_quotation ASC")
+      @ticks = WeeklyQuotation.find_all_by_paper(Paper.busca_papel(params[:paper][:id]).symbol, :conditions => ["date_quotation between ? and ?", date_ini, date_end], :order => "date_quotation ASC")
     end
 
-    if not @cotacoes.nil?
-      @retorno = Backtest.backtest( @cotacoes,
-                                    data_inicial,
-                                    data_final,
-                                    params,
+    if not @ticks.nil?
+      @ret = Backtest.backtest(     @ticks,
                                     false,
-                                    false )
+                                    params )
 
-
-
-#                                    @retorno = Backtest.backtest( @cotacoes,
-#                                                                  data_inicial,
-#                                                                  data_final,
-#                                                                  params[:paper],
-#                                                                  params[:setup],
-#                                                                  params[:pe1_ponto_de_entrada],
-#                                                                  params[:pe1_valor],
-#                                                                  params[:pe1_acima_abaixo],
-#                                                                  params[:pe1_ponto_do_candle],
-#                                                                  params[:pe1_qual_candle],
-#                                                                  params[:ponto_stop_valor],
-#                                                                  params[:ponto_stop_acima_abaixo],
-#                                                                  params[:ponto_stop_ponto_do_candle],
-#                                                                  params[:ponto_stop_lista_de_candles],
-#                                                                  params[:quantidade_maxima_candle_trade],
-#                                                                  params[:ponto_saida_valor],
-#                                                                  params[:perc_perda_trade],
-#                                                                  params[:perc_perda_geral],
-#                                                                  params[:valor_investimento],
-#                                                                  params[:ponto_zerar_risco_percentual],
-#                                                                  params[:prazo],
-###                                                                  params[:valor_corretagem],
-#                                                                  false,
-#                                                                  params[:mm_periodos],
-##                                                                  params[:mm_local],
-#                                                                  params[:mm_tipo],
-#                                                                  false,
-#                                                                  params[:ifr_local],
-#                                                                  params[:ifr_periodos],
-#                                                                  params[:ifr_valor],
-#                                                                  params[:perda_geral_enabled]
-#                                                                  )
-
-      if not @retorno.nil?
-        @totais = @retorno[:totais]
+      if not @ret.nil?
+        @totais = @ret[:totais]
       end
 
-      @trade_results = @retorno[:trade]
+      @trade_results = @ret[:trade]
 
       if params[:mm_enabled]
         if params[:mm_tipo].downcase == 'simples'
@@ -98,7 +60,7 @@ class BacktestsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.xml
     end
   end
