@@ -28,7 +28,7 @@ class BacktestsController < ApplicationController
     ultima_data = Date.new(2000, 1, 1)
 
     date_ini = Date.new(params[:datainicial][:year].to_i, params[:datainicial][:month].to_i, params[:datainicial][:day].to_i)
-    dete_end = Date.new(params[:datafinal][:year].to_i, params[:datafinal][:month].to_i, params[:datafinal][:day].to_i)
+    date_end = Date.new(params[:datafinal][:year].to_i, params[:datafinal][:month].to_i, params[:datafinal][:day].to_i)
 
     if params[:prazo].downcase == 'diario'
       Import.import_day(params[:paper][:id])

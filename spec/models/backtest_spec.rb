@@ -9,6 +9,34 @@ describe Backtest, :type => :model do
 
     create(:setup_rel, id: 1, setup_id: 1, candle_x_value: 'abertura', candle_x_position: 'primeiro', value: 'maior', candle_y_value: 'fechamento', candle_y_position: 'segundo' )
     create(:setup_rel, id: 2, setup_id: 1, candle_x_value: 'fechamento', candle_x_position: 'primeiro', value: 'menor', candle_y_value: 'abertura', candle_y_position: 'segundo' )
+
+    create(   :daily_quotation,
+              :id => 1,
+              :date_quotation => Date.new(2012,3,11),
+              :open => 20,
+              :close => 10,
+              :low => 8,
+              :high => 23,
+              paper: "PETR4.SA",
+              type_candle: "B" )
+    create(   :daily_quotation,
+              :id => 2,
+              :date_quotation => Date.new(2012,3,12),
+              :open => 12,
+              :close => 18,
+              :low => 8,
+              :high => 22,
+              paper: "PETR4.SA",
+              type_candle: "A" )
+    create(   :daily_quotation,
+              :id => 3,
+              :date_quotation => Date.new(2012,3,13),
+              :open => 18,
+              :close => 30,
+              :low => 8,
+              :high => 30,
+              paper: "PETR4.SA",
+              type_candle: "A")
   end
 
   it "Existe relacionamento entre candles" do
@@ -19,31 +47,31 @@ describe Backtest, :type => :model do
     expect(ret.count).to eq 0
   end
 
-  it "insere_lancamentos_no_extrato" do
-    #insere_lancamentos_no_extrato(data, valor, tipo, id, saldo)
-    ret = Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'I', 0, 0, 0, 0)
+  it "insert_list" do
+    #insert_list(data, valor, tipo, id, saldo)
+    ret = Backtest.insert_list(Time.now, 0, 'I', 0, 0, 0, 0)
     expect(ret).to be
 
-    ret = Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'I', 0, 0, 0, 0)
+    ret = Backtest.insert_list(Time.now, 0, 'I', 0, 0, 0, 0)
     expect(ret.count).to eq 8
 
     ret = []
-    ret << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'I', 0, 0, 0, 0)
+    ret << Backtest.insert_list(Time.now, 0, 'I', 0, 0, 0, 0)
     expect(ret.count).to eq 1
-    ret << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'C', 0, 0, 0, 0)
+    ret << Backtest.insert_list(Time.now, 0, 'C', 0, 0, 0, 0)
     expect(ret.count).to eq 2
-    ret << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
+    ret << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
     expect(ret.count).to eq 3
   end
 
   it "atualiza_nr_lancamento_no_extrato" do
     ret = []
-    ret   << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
-    ret   << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
-    ret   << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
-    ret   << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
-    ret   << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
-    ret   << Backtest.insere_lancamentos_no_extrato(Time.now, 0, 'V', 0, 0, 0, 0)
+    ret   << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
+    ret   << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
+    ret   << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
+    ret   << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
+    ret   << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
+    ret   << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
 
     ret = Backtest.atualiza_nr_lancamento_no_extrato(ret)
 
@@ -327,6 +355,118 @@ describe Backtest, :type => :model do
     expect(ret[:encontrei]).to eq true
     expect(ret[:historico]).to eq ''
 
+  end
+
+  it  'find Harami de Alta' do
+    ticks = DailyQuotation.all
+    expect(ticks.count).to eq 3
+
+    trade  = Backtest.verifica_padrao(  ticks,
+                                0,
+                                {:id => "1"},
+                                1,
+                                Date.new(2012,3,11),
+                                2000,
+                                6000,
+                                "ao_atingir",
+                                "0.01",
+                                "acima",
+                                "high",
+                                "1",
+                                "0.01",
+                                "abaixo",
+                                "low",
+                                "1",
+                                "6",
+                                "70",
+                                "05")
+    expect(trade[:id]).to eq 1
+    expect(trade[:status]).to eq "ENCONTRADO"
+
+  end
+
+  it  'not find setup' do
+    ticks = DailyQuotation.all
+    expect(ticks.count).to eq 3
+
+    trade  = Backtest.verifica_padrao(  ticks,
+                                0,
+                                {:id => "2"},
+                                1,
+                                Date.new(2012,3,11),
+                                2000,
+                                6000,
+                                "ao_atingir",
+                                "0.01",
+                                "acima",
+                                "high",
+                                "1",
+                                "0.01",
+                                "abaixo",
+                                "low",
+                                "1",
+                                "6",
+                                "70",
+                                "05")
+    expect(trade).to eq nil
+  end
+
+  it  'find_setup Harami de Alta with 1 candle after'  do
+    ticks = DailyQuotation.all
+    expect(ticks.count).to eq 3
+
+    retorno = Backtest.find_setup(ticks, 0, 1, '5')
+
+    expect(retorno[:find]).to eq true
+    expect(retorno[:candles_on_setup].count).to eq 2
+    expect(retorno[:candles_after_setup].count).to eq 1
+  end
+
+  it  'find_setup Harami de Alta without candles after'  do
+    ticks = DailyQuotation.find(1,2)
+    expect(ticks.count).to eq 2
+
+    retorno = Backtest.find_setup(ticks, 0, 1, '5')
+
+    expect(retorno[:find]).to eq false
+    expect(retorno[:candles_on_setup].count).to eq 0
+    expect(retorno[:candles_after_setup].count).to eq 0
+  end
+
+
+  it 'valida a relacao entre os candles do padrao Harami de Alta' do
+    candles_do_padrao = []
+    candles_do_padrao << {:date_quotation => '2000-01-13',
+                          :open => 112.5,
+                          :close => 106.5,
+                          :low => 106,
+                          :high => 112.5  }
+    candles_do_padrao << {:date_quotation => '2000-01-14',
+                          :open => 107.5,
+                          :close => 108,
+                          :low => 106,
+                          :high => 110.5  }
+
+    ret = Backtest.valida_relacao_entre_candles(candles_do_padrao, 1)
+    expect(ret).to eq true
+  end
+
+
+  it 'nao valida a relacao entre os candles do padrao Harami de Alta' do
+    candles_do_padrao = []
+    candles_do_padrao << {:date_quotation => '2000-01-13',
+                          :open => 112.5,
+                          :close => 106.5,
+                          :low => 106,
+                          :high => 112.5  }
+    candles_do_padrao << {:date_quotation => '2000-01-14',
+                          :open => 100.5,
+                          :close => 108,
+                          :low => 106,
+                          :high => 110.5  }
+
+    ret = Backtest.valida_relacao_entre_candles(candles_do_padrao, 1)
+    expect(ret).to eq false
   end
 
 end

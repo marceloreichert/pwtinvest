@@ -56,7 +56,7 @@ class Setup < ActiveRecord::Base
     str_xml = nil
 
     cotacoes.each do |cot|
-      retorno = Backtest.encontrar_padroes_de_candles_do_setup(cotacoes, indice, setup_id, 4)
+      retorno = Backtest.find_setup(cotacoes, indice, setup_id, 4)
 
       if retorno[:encontrei]
         if Backtest.valida_relacao_entre_candles(retorno[:candles_do_padrao], setup_id)
