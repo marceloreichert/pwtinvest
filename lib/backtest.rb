@@ -1,3 +1,5 @@
+require 'lib/verify_setup'
+
 module Backtest
   include ActionView::Helpers::NumberHelper
   require 'pry'
