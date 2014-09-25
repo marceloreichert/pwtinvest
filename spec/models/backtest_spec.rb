@@ -40,10 +40,10 @@ describe Backtest, :type => :model do
   end
 
   it "Existe relacionamento entre candles" do
-    ret = Backtest.lista_relacionamentos_entre_candles(1)
+    ret = VerifySetup.relation_list(1)
     expect(ret.count).to eq 2
 
-    ret = Backtest.lista_relacionamentos_entre_candles(0)
+    ret = VerifySetup.relation_list(0)
     expect(ret.count).to eq 0
   end
 
@@ -73,7 +73,7 @@ describe Backtest, :type => :model do
     ret   << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
     ret   << Backtest.insert_list(Time.now, 0, 'V', 0, 0, 0, 0)
 
-    ret = Backtest.atualiza_nr_lancamento_no_extrato(ret)
+    ret = Backtest.set_counter(ret)
 
     expect(ret.count).to eq 6
     expect(ret[0][:lancamento]).to eq 1
@@ -361,7 +361,8 @@ describe Backtest, :type => :model do
     ticks = DailyQuotation.all
     expect(ticks.count).to eq 3
 
-    trade  = Backtest.verifica_padrao(  ticks,
+    trade = []
+    trade << VerifySetup.verify(  ticks,
                                 0,
                                 {:id => "1"},
                                 1,
@@ -380,8 +381,9 @@ describe Backtest, :type => :model do
                                 "6",
                                 "70",
                                 "05")
-    expect(trade[:id]).to eq 1
-    expect(trade[:status]).to eq "ENCONTRADO"
+    expect(trade.size).to eq 1
+    expect(trade[0][:id]).to eq 1
+    expect(trade[0][:status]).to eq "ENCONTRADO"
 
   end
 
@@ -389,7 +391,7 @@ describe Backtest, :type => :model do
     ticks = DailyQuotation.all
     expect(ticks.count).to eq 3
 
-    trade  = Backtest.verifica_padrao(  ticks,
+    trade = VerifySetup.verify(  ticks,
                                 0,
                                 {:id => "2"},
                                 1,
@@ -415,7 +417,7 @@ describe Backtest, :type => :model do
     ticks = DailyQuotation.all
     expect(ticks.count).to eq 3
 
-    retorno = Backtest.find_setup(ticks, 0, 1, '5')
+    retorno = VerifySetup.find(ticks, 0, 1, '5')
 
     expect(retorno[:find]).to eq true
     expect(retorno[:candles_on_setup].count).to eq 2
@@ -426,7 +428,7 @@ describe Backtest, :type => :model do
     ticks = DailyQuotation.find(1,2)
     expect(ticks.count).to eq 2
 
-    retorno = Backtest.find_setup(ticks, 0, 1, '5')
+    retorno = VerifySetup.find(ticks, 0, 1, '5')
 
     expect(retorno[:find]).to eq false
     expect(retorno[:candles_on_setup].count).to eq 0
@@ -434,38 +436,38 @@ describe Backtest, :type => :model do
   end
 
 
-  it 'valida a relacao entre os candles do padrao Harami de Alta' do
-    candles_do_padrao = []
-    candles_do_padrao << {:date_quotation => '2000-01-13',
+  it 'validate relation setup Harami de Alta' do
+    candles = []
+    candles << {:date_quotation => '2000-01-13',
                           :open => 112.5,
                           :close => 106.5,
                           :low => 106,
                           :high => 112.5  }
-    candles_do_padrao << {:date_quotation => '2000-01-14',
+    candles << {:date_quotation => '2000-01-14',
                           :open => 107.5,
                           :close => 108,
                           :low => 106,
                           :high => 110.5  }
 
-    ret = Backtest.valida_relacao_entre_candles(candles_do_padrao, 1)
+    ret = VerifySetup.validate_relation(candles, 1)
     expect(ret).to eq true
   end
 
 
-  it 'nao valida a relacao entre os candles do padrao Harami de Alta' do
-    candles_do_padrao = []
-    candles_do_padrao << {:date_quotation => '2000-01-13',
+  it 'dont validate relation setup Harami de Alta' do
+    candles = []
+    candles << {:date_quotation => '2000-01-13',
                           :open => 112.5,
                           :close => 106.5,
                           :low => 106,
                           :high => 112.5  }
-    candles_do_padrao << {:date_quotation => '2000-01-14',
+    candles << {:date_quotation => '2000-01-14',
                           :open => 100.5,
                           :close => 108,
                           :low => 106,
                           :high => 110.5  }
 
-    ret = Backtest.valida_relacao_entre_candles(candles_do_padrao, 1)
+    ret = VerifySetup.validate_relation(candles, 1)
     expect(ret).to eq false
   end
 

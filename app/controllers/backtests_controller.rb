@@ -44,9 +44,7 @@ class BacktestsController < ApplicationController
                                     false,
                                     params )
 
-      if not @ret.nil?
-        @totais = @ret[:totais]
-      end
+      @totais = @ret[:totais] if not @ret.nil?
 
       @trade_results = @ret[:trade]
 

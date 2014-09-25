@@ -56,10 +56,10 @@ class Setup < ActiveRecord::Base
     str_xml = nil
 
     cotacoes.each do |cot|
-      retorno = Backtest.find_setup(cotacoes, indice, setup_id, 4)
+      retorno = VerifySetup.find(cotacoes, indice, setup_id, 4)
 
       if retorno[:encontrei]
-        if Backtest.valida_relacao_entre_candles(retorno[:candles_do_padrao], setup_id)
+        if VerifySetup.validate_relation(retorno[:candles_do_padrao], setup_id)
           str_xml = Backtest.gera_xml_do_grafico(retorno, 'Exemplo', quantidade_candles)
           return str_xml
         end

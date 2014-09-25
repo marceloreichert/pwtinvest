@@ -45,7 +45,7 @@ module Backtest
       end
     end
 
-    trade_padrao = []
+    tick_verified = []
     @list  = []
     @vlr_investiment = vlr_investiment.to_f
     @saldo = vlr_investiment.to_f
@@ -53,34 +53,34 @@ module Backtest
     valor_perda_trade = @saldo * (perc_perda_trade.to_f / 100) # 100.000,00 * 2% = 2.000,00
     valor_perda_geral = @saldo * (perc_perda_geral.to_f / 100) # 100.000,00 * 6% = 6.000,00
 
-    @list = insert_list( nil, 0.00, "I", nil, @saldo, 0.00, 0.00)
-
-    indice = 0
+    @list   << insert_list( nil, 0.00, "I", nil, @saldo, 0.00, 0.00)
+    indice  = 0
 
     @ticks.each do |tick|
 
-      trade_padrao  <<  verifica_padrao(@ticks,
-                                        indice,
-                                        setup,
-                                        tick.id,
-                                        tick.date_quotation,
-                                        valor_perda_trade,
-                                        valor_perda_geral,
-                                        pe1_ponto_de_entrada,
-                                        pe1_valor,
-                                        pe1_acima_abaixo,
-                                        pe1_ponto_do_candle,
-                                        pe1_qual_candle,
-                                        ponto_stop_valor,
-                                        ponto_stop_acima_abaixo,
-                                        ponto_stop_ponto_do_candle,
-                                        ponto_stop_lista_de_candles,
-                                        ponto_saida_valor,
-                                        ponto_zerar_risco_percentual,
-                                        quantidade_maxima_candle_trade
-                                        )
+      ret = VerifySetup.verify(  @ticks,
+                              indice,
+                              setup,
+                              tick.id,
+                              tick.date_quotation,
+                              valor_perda_trade,
+                              valor_perda_geral,
+                              pe1_ponto_de_entrada,
+                              pe1_valor,
+                              pe1_acima_abaixo,
+                              pe1_ponto_do_candle,
+                              pe1_qual_candle,
+                              ponto_stop_valor,
+                              ponto_stop_acima_abaixo,
+                              ponto_stop_ponto_do_candle,
+                              ponto_stop_lista_de_candles,
+                              ponto_saida_valor,
+                              ponto_zerar_risco_percentual,
+                              quantidade_maxima_candle_trade  )
 
-      trade_padrao.each do |t|
+      tick_verified  <<  ret unless ret.nil?
+
+      tick_verified.each do |t|
 
         if t[:status] == "ENCONTRADO"
           retorno = valida_padrao(t,
@@ -90,7 +90,7 @@ module Backtest
                                   valor_perda_geral,
                                   valor_corretagem,
                                   setup,
-                                  ifr_enabled,
+                                  false,
                                   ifr_local,
                                   ifr_valor,
                                   mm_enabled,
@@ -133,7 +133,7 @@ module Backtest
               t[:valor_total_em_aberto] = t[:valor_total_em_aberto] - valor_total_venda
               t[:valor_total_venda] = t[:valor_total_venda] + valor_total_venda
 
-              @list = insert_list( tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, t[:risco_do_trade], @risco_acumulado)
+              @list << insert_list( tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, t[:risco_do_trade], @risco_acumulado)
 
               historico = "Candle do dia "
               historico << tick.date_quotation.strftime("%d/%m/%Y")
@@ -164,7 +164,7 @@ module Backtest
                 t[:valor_total_em_aberto] = t[:valor_total_em_aberto] - valor_total_venda
                 t[:valor_total_venda] = t[:valor_total_venda] + valor_total_venda
 
-                @list = insert_list( tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
+                @list << insert_list( tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
 
                 historico = "Candle do dia " + tick.date_quotation.strftime("%d/%m/%Y")
                 historico << " atingiu o Ponto de Zerar Risco em "
@@ -196,7 +196,7 @@ module Backtest
                 historico1 = "VENDA "
               end
 
-              @list = insert_list( tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
+              @list << insert_list( tick.date_quotation, valor_total_venda, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
 
               historico = "Candle do dia " + tick.date_quotation.strftime("%d/%m/%Y")
               historico << " atingiu o Ponto de Saida em "
@@ -229,7 +229,7 @@ module Backtest
                 @risco_acumulado = @risco_acumulado - risco_do_trade
               end
 
-              @list = insert_list( tick.date_quotation, valor_saida, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
+              @list << insert_list( tick.date_quotation, valor_saida, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
 
               historico = "Ponto de Saida ou Stop Loss nao atingidos. "
               historico << "Vendidos " + t[:lotes_a_vender].to_s + " lotes "
@@ -252,23 +252,23 @@ module Backtest
       indice = indice + 1
     end
 
-    @extrato  = Backtest.atualiza_nr_lancamento_no_extrato(@extrato)
-    @totais = calcula_totais()
+    @list   = Backtest.set_counter(@list)
+    @totais = calcula_totais(tick_verified)
 
-    retorno = { :trade => @resumo_por_trade,
+    retorno = { :trade => tick_verified,
                 :extrato => @extrato,
                 :totais => @totais }
 
     return  retorno
   end
 
-  def atualiza_nr_lancamento_no_extrato(extrato)
-    if extrato.count > 0
-      for i in 1..extrato.count
-        extrato[i-1][:lancamento] = i
+  def set_counter(list)
+    if list.count > 0
+      for i in 1..list.count
+        list[i-1][:lancamento] = i
       end
     end
-    extrato
+    list
   end
 
   def gera_xml_do_grafico(dados, label, quantidade_candles)
@@ -505,7 +505,7 @@ module Backtest
     end
   end
 
-  def calcula_totais()
+  def calcula_totais(tick_verified)
     total_padroes_vencedores = 0
     total_padroes_perdedores = 0
     total_padroes_perdedores_em_sequencia = 0
@@ -519,21 +519,21 @@ module Backtest
     total_valor_padroes_vencedores = 0
     total_valor_padroes_perdedores = 0
 
-    @resumo_por_trade.each do |trade|
+    tick_verified.each do |tick|
 
       total_padroes_encontrados = total_padroes_encontrados + 1
-      if trade[:status] == "VALIDADO" ||
-         trade[:status] == "ESTOPADO" ||
-         trade[:status] == "VENDIDO"
+      if tick[:status] == "VALIDADO" ||
+         tick[:status] == "ESTOPADO" ||
+         tick[:status] == "VENDIDO"
         total_padroes_validados = total_padroes_validados + 1
 
-        if trade[:lotes_a_vender] > 0
+        if tick[:lotes_a_vender] > 0
           total_padroes_em_aberto = total_padroes_em_aberto + 1
-          total_valor_padroes_em_aberto = total_valor_padroes_em_aberto + trade[:valor_total_em_aberto]
+          total_valor_padroes_em_aberto = total_valor_padroes_em_aberto + tick[:valor_total_em_aberto]
 
-        elsif trade[:valor_total_compra] > trade[:valor_total_venda]
+        elsif tick[:valor_total_compra] > tick[:valor_total_venda]
           total_padroes_perdedores = total_padroes_perdedores + 1
-          total_valor_padroes_perdedores = total_valor_padroes_perdedores + (trade[:valor_total_compra] - trade[:valor_total_venda])
+          total_valor_padroes_perdedores = total_valor_padroes_perdedores + (tick[:valor_total_compra] - tick[:valor_total_venda])
 
           padroes_perdedores_em_sequencia = padroes_perdedores_em_sequencia + 1
           if padroes_perdedores_em_sequencia > total_padroes_perdedores_em_sequencia
@@ -542,7 +542,7 @@ module Backtest
 
         else
           total_padroes_vencedores = total_padroes_vencedores + 1
-          total_valor_padroes_vencedores = total_valor_padroes_vencedores + (trade[:valor_total_venda] - trade[:valor_total_compra])
+          total_valor_padroes_vencedores = total_valor_padroes_vencedores + (tick[:valor_total_venda] - tick[:valor_total_compra])
           padroes_perdedores_em_sequencia = 0
         end
       end
@@ -584,65 +584,6 @@ module Backtest
     return retorno
   end
 
-  def verifica_padrao(  ticks,
-                        indice,
-                        setup,
-                        id_do_padrao,
-                        data_do_padrao,
-                        valor_perda_trade,
-                        valor_perda_geral,
-                        pe1_ponto_de_entrada,
-                        pe1_valor,
-                        pe1_acima_abaixo,
-                        pe1_ponto_do_candle,
-                        pe1_qual_candle,
-                        pstop1,
-                        pstop2,
-                        pstop3,
-                        pstop4,
-                        ps1,
-                        ponto_zerar_risco_percentual,
-                        quantidade_maxima_de_candles_do_trade
-                        )
-  ##TESTED
-    ret = find_setup(ticks, indice, setup[:id], quantidade_maxima_de_candles_do_trade)
-
-    return nil if not ret[:find]
-    return nil if not valida_relacao_entre_candles(ret[:candles_on_setup], setup[:id])
-
-    quantidade_candles_do_padrao = ret[:candles_on_setup].length
-    valor_ponto_de_entrada = identifica_valor_ponto_de_entrada(pe1_valor, pe1_acima_abaixo, pe1_ponto_do_candle, pe1_qual_candle, ret[:candles_on_setup])
-    valor_ponto_de_stop = identifica_valor_ponto_de_stop(pstop1, pstop2, pstop3, pstop4, ret[:candles_on_setup])
-    valor_ponto_de_saida = identifica_valor_ponto_de_saida(valor_ponto_de_entrada, ps1)
-    dados_do_proximo_candle_apos_padrao = identifica_dados_do_proximo_candle_apos_padrao(ret[:candles_after_setup], pe1_ponto_de_entrada, quantidade_candles_do_padrao)
-
-    return {    :id => id_do_padrao,
-                :status => "ENCONTRADO",
-                :numero_trades => 1,
-                :lotes_comprados => 0,
-                :lotes_a_vender => 0,
-                :lote_zerar_risco => 0,
-                :perc_a_vender => 100,
-                :data_do_padrao => data_do_padrao,
-                :data_da_compra => dados_do_proximo_candle_apos_padrao[:data_da_compra],
-                :valor_para_validar_padrao => dados_do_proximo_candle_apos_padrao[:valor_para_validar_padrao],
-                :valor_ponto_compra => valor_ponto_de_entrada,
-                :valor_ponto_stop => valor_ponto_de_stop,
-                :valor_ponto_venda => valor_ponto_de_saida,
-                :valor_ponto_zerar_risco => 0,
-                :valor_total_compra => 0,
-                :valor_total_venda => 0,
-                :valor_total_em_aberto => 0,
-                :valor_media => 0,
-                :valor_cruzamento_media_1 => 0,
-                :valor_cruzamento_media_2 => 0,
-                :valor_ifr => 0,
-                :tipo_validacao => dados_do_proximo_candle_apos_padrao[:tipo_validacao],
-                :historico => [],
-                :candles_do_padrao => ret[:candles_on_setup],
-                :candles_apos_padrao => ret[:candles_after_setup],
-                :risco_do_trade => 0  }
-  end
 
 
   def valida_padrao( trade,
@@ -795,7 +736,7 @@ module Backtest
 
           trade[:risco_do_trade] = risco_do_trade
 
-          @list = insert_list( trade[:data_da_compra], valor_total_compra, "C", trade[:id], @saldo, risco_do_trade, @risco_acumulado)
+          @list << insert_list( trade[:data_da_compra], valor_total_compra, "C", trade[:id], @saldo, risco_do_trade, @risco_acumulado)
         else
           status = "NAO VALIDADO"
           historico = "Valor de lotes comprados invalido."
@@ -814,75 +755,6 @@ module Backtest
   end
 
 
-  def valida_relacao_entre_candles(candles_do_padrao, setup_id)
-  ##TESTED
-    setup_rels = lista_relacionamentos_entre_candles(setup_id)
-    valido = true
-
-    setup_rels.each do |rel|
-      if valido
-        if rel.candle_x_position == 'primeiro'
-          candle_x_position = 1
-        elsif rel.candle_x_position == 'segundo'
-          candle_x_position = 2
-        elsif rel.candle_x_position == 'terceiro'
-          candle_x_position = 3
-        end
-
-        cot = candles_do_padrao[(candle_x_position - 1 )]
-
-        if rel.candle_x_value == 'abertura'
-          candle_x_value = cot[:open]
-        elsif rel.candle_x_value == 'fechamento'
-          candle_x_value = cot[:close]
-        elsif rel.candle_x_value == 'maxima'
-          candle_x_value = cot[:high]
-        elsif rel.candle_x_value == 'minima'
-          candle_x_value = cot[:low]
-        end
-
-
-        if rel.candle_y_position == 'primeiro'
-          candle_y_position = 1
-        elsif rel.candle_y_position == 'segundo'
-          candle_y_position = 2
-        elsif rel.candle_y_position == 'terceiro'
-          candle_y_position = 3
-        end
-
-        cot = candles_do_padrao[(candle_y_position - 1 )]
-
-        if rel.candle_y_value == 'abertura'
-          candle_y_value = cot[:open]
-        elsif rel.candle_y_value == 'fechamento'
-          candle_y_value = cot[:close]
-        elsif rel.candle_y_value == 'maxima'
-          candle_y_value = cot[:high]
-        elsif rel.candle_y_value == 'minima'
-          candle_y_value = cot[:low]
-        end
-
-
-
-        if rel.value == 'maior'
-          if candle_x_value > candle_y_value
-            valido = true
-          else
-            valido = false
-          end
-        end
-
-        if rel.value == 'menor'
-          if candle_x_value < candle_y_value
-            valido = true
-          else
-            valido = false
-          end
-        end
-      end
-    end
-    return valido
-  end
 
 
   def valida_media_movel(candles_do_padrao, setup, mm_enabled, mm_local)
@@ -902,106 +774,6 @@ module Backtest
 
     return { encontrei: ok, historico: historico }
   end
-
-
-  def find_setup(tick, idx, setup_id, max_candles_after_trade)
-
-    setup = Setup.busca_setup(setup_id)
-    candles_on_setup = []
-    candles_after_setup = []
-    find = true
-
-    setup_quantity_candle = setup[:quantity_candle].to_i
-
-    (1..setup_quantity_candle).each  do |candle|
-
-      case candle
-      when 1
-        setup_candle_status = setup[:first_candle]
-        setup_candle_type = setup[:first_candle_type]
-      when 2
-        setup_candle_status = setup[:second_candle]
-        setup_candle_type = setup[:second_candle_type]
-      when 3
-        setup_candle_status = setup[:third_candle]
-        setup_candle_type = setup[:third_candle_type]
-      end
-
-      setup_candle_type = "" if setup_candle_type.nil?
-
-      t = tick.at(idx + (candle - 1))
-
-      if t.nil?
-        find = false
-        break
-      end
-
-      #Verifica o tipo de cada candle A=Alta, B=Baixa ou "N"=Sei la
-      if t.type_candle == setup_candle_status || setup_candle_status == "N"
-
-        find = true
-        candles_on_setup  <<  { :date_quotation => t.date_quotation,
-                                :open => t.open,
-                                :close => t.close,
-                                :low => t.low,
-                                :high => t.high }
-      else
-        find = false
-        break
-      end
-
-      #Verifica se candle eh MARTELO
-      if setup_candle_type.downcase == 'martelo'
-
-        if t.type_candle == "A"
-          valor_sombra_inferior = t.open - t.low
-          valor_sombra_superior = t.high - t.close
-        else
-          valor_sombra_inferior = t.close - t.low
-          valor_sombra_superior = t.high - t.open
-        end
-
-        valor_corpo = t.open - t.close
-        valor_corpo = valor_corpo.abs
-
-        if valor_sombra_inferior > (valor_corpo * 2) && valor_sombra_superior < valor_corpo
-          find = true
-        else
-          find = false
-          break
-        end
-      end
-    end
-
-    ## find candles after setup
-    if find
-      pos_inicial = candles_on_setup.length + 1
-      pos_final = pos_inicial + (max_candles_after_trade.to_i - 1)
-
-      (pos_inicial..pos_final).each  do |position_candle|
-        t = tick.at(idx + (position_candle - 1))
-
-        break if t.nil?
-
-        candles_after_setup << {:date_quotation => t.date_quotation,
-                                :open => t.open,
-                                :close => t.close,
-                                :low => t.low,
-                                :high => t.high }
-       end
-    end
-
-    if candles_after_setup.size  ==  0
-      find = false
-      candles_on_setup = []
-      candles_after_setup = []
-    end
-
-    return  { :find => find,
-              :candles_on_setup => candles_on_setup,
-              :candles_after_setup => candles_after_setup }
-  end
-
 
   def identifica_valor_ponto_de_entrada(pe1_valor, pe1_acima_abaixo, pe1_ponto_do_candle, pe1_qual_candle, candles)
     #testado.
@@ -1109,10 +881,6 @@ module Backtest
     return dados
   end
 
-  def lista_relacionamentos_entre_candles(setup_id)
-    return SetupRel.where('setup_id = ?', setup_id)
-  end
-
   def carrega_lista_ponto_do_candle
     ponto_do_candle = [['da maxima','high'], ['da minima','low'], ['da abertura','open'], ['do fechamento','close']]
   end
@@ -1134,7 +902,7 @@ module Backtest
   end
 
   def insert_list(data, valor, tipo, id, saldo, risco_do_trade, risco_acumulado)
-    list  =  {  lancamento: 0,
+    return  {   lancamento: 0,
                 data: data,
                 valor: valor,
                 tipo: tipo,
