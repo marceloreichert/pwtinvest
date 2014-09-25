@@ -1,7 +1,7 @@
-module Import
-  extend self
+module Backtest
+  class Import
 
-  def import_day(paper)
+  def self.day(paper)
 
     quote = DailyQuotation.where("paper = ?", Paper.busca_papel(paper).symbol).order("date_quotation ASC").last
 
@@ -52,7 +52,7 @@ module Import
   end
 
 
-  def import_week(paper)
+  def self.week(paper)
 
     quote = WeeklyQuotation.where("paper = ?", Paper.busca_papel(paper).symbol).order("date_quotation ASC").last
 
