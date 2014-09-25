@@ -1,7 +1,6 @@
-module VerifySetup
-  extend self
-
-  def verify( ticks,
+module Backtest
+  class VerifySetup
+  def self.verify( ticks,
               indice,
               setup,
               id_do_padrao,
@@ -60,7 +59,7 @@ module VerifySetup
                 :risco_do_trade => 0  }
   end
 
-  def find(tick, idx, setup_id, max_candles_after_trade)
+  def self.find(tick, idx, setup_id, max_candles_after_trade)
 
     setup = Setup.busca_setup(setup_id)
     candles_on_setup = []
@@ -158,7 +157,7 @@ module VerifySetup
               :candles_after_setup => candles_after_setup }
   end
 
-  def validate_relation(candles_do_padrao, setup_id)
+  def self.validate_relation(candles_do_padrao, setup_id)
 
     setup_rels = relation_list(setup_id)
     valido = true
@@ -228,8 +227,8 @@ module VerifySetup
     return valido
   end
 
-  def relation_list(setup_id)
+  def self.relation_list(setup_id)
     return SetupRel.where('setup_id = ?', setup_id)
   end
-
+end
 end
