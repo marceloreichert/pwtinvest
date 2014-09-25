@@ -1,9 +1,8 @@
 module Backtest
   include ActionView::Helpers::NumberHelper
-  extend self
   require 'pry'
 
-  def backtest  (     ticks,
+  def self.backtest  (     ticks,
                       mm_enabled,
                       params = {} )
 
@@ -262,7 +261,7 @@ module Backtest
     return  retorno
   end
 
-  def set_counter(list)
+  def self.set_counter(list)
     if list.count > 0
       for i in 1..list.count
         list[i-1][:lancamento] = i
@@ -271,7 +270,7 @@ module Backtest
     list
   end
 
-  def gera_xml_do_grafico(dados, label, quantidade_candles)
+  def self.gera_xml_do_grafico(dados, label, quantidade_candles)
     valor_minima = 9999999
     valor_maxima = 0
     data = nil
@@ -360,7 +359,7 @@ module Backtest
 		return str_xml
   end
 
-  def calcula_media_movel_simples(cotacoes, periodos, tipo)
+  def self.calcula_media_movel_simples(cotacoes, periodos, tipo)
 
     indice = 0
     valor_total = 0
@@ -408,7 +407,7 @@ module Backtest
     end
   end
 
-  def calcula_media_movel_exponencial(cotacoes, periodos, tipo)
+  def self.calcula_media_movel_exponencial(cotacoes, periodos, tipo)
 
     valor_total = 0
     calculou_primeiro = false
@@ -469,7 +468,7 @@ module Backtest
   end
 
 
-  def calcula_ifr(cotacoes, periodos)
+  def self.calcula_ifr(cotacoes, periodos)
 
     indice = 0
 
@@ -505,7 +504,7 @@ module Backtest
     end
   end
 
-  def calcula_totais(tick_verified)
+  def self.calcula_totais(tick_verified)
     total_padroes_vencedores = 0
     total_padroes_perdedores = 0
     total_padroes_perdedores_em_sequencia = 0
@@ -586,7 +585,7 @@ module Backtest
 
 
 
-  def valida_padrao( trade,
+  def self.valida_padrao( trade,
                           data,
                           ponto_zerar_risco_percentual,
                           valor_perda_trade,
@@ -757,7 +756,7 @@ module Backtest
 
 
 
-  def valida_media_movel(candles_do_padrao, setup, mm_enabled, mm_local)
+  def self.valida_media_movel(candles_do_padrao, setup, mm_enabled, mm_local)
   ## TESTED
     setup = Setup.busca_setup(setup[:id])
 
@@ -775,7 +774,7 @@ module Backtest
     return { encontrei: ok, historico: historico }
   end
 
-  def identifica_valor_ponto_de_entrada(pe1_valor, pe1_acima_abaixo, pe1_ponto_do_candle, pe1_qual_candle, candles)
+  def self.identifica_valor_ponto_de_entrada(pe1_valor, pe1_acima_abaixo, pe1_ponto_do_candle, pe1_qual_candle, candles)
     #testado.
     return nil if pe1_valor == 0
 
@@ -817,7 +816,7 @@ module Backtest
   end
 
 
-  def identifica_valor_ponto_de_stop(pstop1, pstop2, pstop3, pstop4, candles_do_padrao)
+  def self.identifica_valor_ponto_de_stop(pstop1, pstop2, pstop3, pstop4, candles_do_padrao)
 
     #pstop4 => "primeiro", "segundo", "terceiro" candle
     position_candle = pstop4.to_i
@@ -850,13 +849,13 @@ module Backtest
   end
 
 
-  def identifica_valor_ponto_de_saida(valor_ponto_de_entrada, ps1)
+  def self.identifica_valor_ponto_de_saida(valor_ponto_de_entrada, ps1)
     valor_ponto_de_saida = valor_ponto_de_entrada + (valor_ponto_de_entrada * ( ps1.to_f / 100 ))
     return valor_ponto_de_saida
   end
 
 
-  def identifica_dados_do_proximo_candle_apos_padrao(candles_apos_padrao, pe1, quantidade_candles_do_padrao)
+  def self.identifica_dados_do_proximo_candle_apos_padrao(candles_apos_padrao, pe1, quantidade_candles_do_padrao)
     cot = candles_apos_padrao[0]
 
     if not cot.nil?
@@ -881,27 +880,27 @@ module Backtest
     return dados
   end
 
-  def carrega_lista_ponto_do_candle
+  def self.carrega_lista_ponto_do_candle
     ponto_do_candle = [['da maxima','high'], ['da minima','low'], ['da abertura','open'], ['do fechamento','close']]
   end
 
-  def carrega_lista_ponto_do_candle2
+  def self.carrega_lista_ponto_do_candle2
     ponto_do_candle = [['da minima','low'], ['da maxima','high'], ['da abertura','open'], ['do fechamento','close']]
   end
 
-  def carrega_lista_acima_abaixo
+  def self.carrega_lista_acima_abaixo
     ret = [['acima','acima'],['abaixo','abaixo']]
   end
 
-  def carrega_lista_abaixo_acima
+  def self.carrega_lista_abaixo_acima
     ret = [['abaixo','abaixo'],['acima','acima']]
   end
 
-  def carrega_lista_ponto_de_entrada
+  def self.carrega_lista_ponto_de_entrada
     ret = [['Ao atingir','ao_atingir'],['Ao fechar','ao_fechar']]
   end
 
-  def insert_list(data, valor, tipo, id, saldo, risco_do_trade, risco_acumulado)
+  def self.insert_list(data, valor, tipo, id, saldo, risco_do_trade, risco_acumulado)
     return  {   lancamento: 0,
                 data: data,
                 valor: valor,
@@ -915,7 +914,7 @@ module Backtest
 
   private
 
-  def valid(type, options={})
+  def self.valid(type, options={})
     if type.upcase == 'ACIMA'
       if options[:low] <= options[:valor_media] && options[:valor_media] > 0
         return "Candle do dia " << options[:date_quotation].strftime("%d/%m/%Y") << " nao esta ACIMA da media movel."
