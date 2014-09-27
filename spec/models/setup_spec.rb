@@ -8,8 +8,8 @@ describe Setup, :type => :model do
     create(:setup, id: 3, setup: 'Teste', description: 'Teste', quantity_candle: 3, first_candle: 'A', second_candle: 'A', third_candle: 'A' )
   end
 
-  it "busca_setup" do
-    setup = Setup.busca_setup(1)
+  it "load_setup" do
+    setup = Setup.load(1)
     expect(setup.setup).to eq('Harami de Alta')
     expect(setup.quantity_candle).to eq(2)
   end

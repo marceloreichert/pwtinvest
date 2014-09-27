@@ -40,6 +40,8 @@ class BacktestsController < ApplicationController
     end
 
     if not @ticks.nil?
+      ticks_filtered = Validate.validate(@ticks, params[:setup][:id])
+
       @ret = Backtest.backtest(     @ticks,
                                     false,
                                     params )
@@ -48,13 +50,6 @@ class BacktestsController < ApplicationController
 
       @trade_results = @ret[:trade]
 
-      if params[:mm_enabled]
-        if params[:mm_tipo].downcase == 'simples'
-          @mm_descricao = 'MMA' + params[:mm_periodo].to_s
-        else
-          @mm_descricao = 'MME' + params[:mm_periodo].to_s
-        end
-      end
     end
 
     respond_to do |format|

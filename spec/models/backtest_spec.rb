@@ -40,10 +40,10 @@ describe Backtest, :type => :model do
   end
 
   it "Existe relacionamento entre candles" do
-    ret = VerifySetup.relation_list(1)
+    ret = Backtest.relation_list(1)
     expect(ret.count).to eq 2
 
-    ret = VerifySetup.relation_list(0)
+    ret = Backtest.relation_list(0)
     expect(ret.count).to eq 0
   end
 
@@ -362,7 +362,7 @@ describe Backtest, :type => :model do
     expect(ticks.count).to eq 3
 
     trade = []
-    trade << VerifySetup.verify(  ticks,
+    trade << Backtest.verify(  ticks,
                                 0,
                                 {:id => "1"},
                                 1,
@@ -391,7 +391,7 @@ describe Backtest, :type => :model do
     ticks = DailyQuotation.all
     expect(ticks.count).to eq 3
 
-    trade = VerifySetup.verify(  ticks,
+    trade = Backtest.verify(  ticks,
                                 0,
                                 {:id => "2"},
                                 1,
@@ -417,7 +417,7 @@ describe Backtest, :type => :model do
     ticks = DailyQuotation.all
     expect(ticks.count).to eq 3
 
-    retorno = VerifySetup.find(ticks, 0, 1, '5')
+    retorno = Backtest.find(ticks, 0, 1, '5')
 
     expect(retorno[:find]).to eq true
     expect(retorno[:candles_on_setup].count).to eq 2
@@ -428,7 +428,7 @@ describe Backtest, :type => :model do
     ticks = DailyQuotation.find(1,2)
     expect(ticks.count).to eq 2
 
-    retorno = VerifySetup.find(ticks, 0, 1, '5')
+    retorno = Backtest.find(ticks, 0, 1, '5')
 
     expect(retorno[:find]).to eq false
     expect(retorno[:candles_on_setup].count).to eq 0
@@ -449,7 +449,7 @@ describe Backtest, :type => :model do
                           :low => 106,
                           :high => 110.5  }
 
-    ret = VerifySetup.validate_relation(candles, 1)
+    ret = Backtest.validate_relation(candles, 1)
     expect(ret).to eq true
   end
 
@@ -467,7 +467,7 @@ describe Backtest, :type => :model do
                           :low => 106,
                           :high => 110.5  }
 
-    ret = VerifySetup.validate_relation(candles, 1)
+    ret = Backtest.validate_relation(candles, 1)
     expect(ret).to eq false
   end
 

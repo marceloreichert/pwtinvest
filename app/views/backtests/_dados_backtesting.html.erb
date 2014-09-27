@@ -16,7 +16,7 @@
 	</tr>
 	<tr>
 		<td>Padrão:</td>
-		<td><b><%= Setup.busca_setup(params[:setup][:id]).nil? ? "-- Selecione um padrão --" : Setup.busca_setup(params[:setup][:id]).setup %> </b></td>
+		<td><b><%= Setup.load(params[:setup][:id]).nil? ? "-- Selecione um padrão --" : Setup.load(params[:setup][:id]).setup %> </b></td>
 		<td>&nbsp;&nbsp;&nbsp;</td>
 		<td>Máximo Perda por Trade:</td>
 		<td><b><%= params[:perc_perda_trade] %> % </b></td>
