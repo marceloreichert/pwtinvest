@@ -40,7 +40,10 @@ class BacktestsController < ApplicationController
     end
 
     if not @ticks.nil?
-      ticks_filtered = Validate.validate(@ticks, params[:setup][:id])
+      ticks_filtered  = Validate.validate(@ticks, params[:setup][:id])
+
+      ticks_filtered  = Relation.relation(ticks_filtered, params[:setup][:id])
+
 
       @ret = Backtest.backtest(     @ticks,
                                     false,

@@ -39,14 +39,6 @@ describe Backtest, :type => :model do
               type_candle: "A")
   end
 
-  it "Existe relacionamento entre candles" do
-    ret = Backtest.relation_list(1)
-    expect(ret.count).to eq 2
-
-    ret = Backtest.relation_list(0)
-    expect(ret.count).to eq 0
-  end
-
   it "insert_list" do
     #insert_list(data, valor, tipo, id, saldo)
     ret = Backtest.insert_list(Time.now, 0, 'I', 0, 0, 0, 0)
@@ -355,120 +347,6 @@ describe Backtest, :type => :model do
     expect(ret[:encontrei]).to eq true
     expect(ret[:historico]).to eq ''
 
-  end
-
-  it  'find Harami de Alta' do
-    ticks = DailyQuotation.all
-    expect(ticks.count).to eq 3
-
-    trade = []
-    trade << Backtest.verify(  ticks,
-                                0,
-                                {:id => "1"},
-                                1,
-                                Date.new(2012,3,11),
-                                2000,
-                                6000,
-                                "ao_atingir",
-                                "0.01",
-                                "acima",
-                                "high",
-                                "1",
-                                "0.01",
-                                "abaixo",
-                                "low",
-                                "1",
-                                "6",
-                                "70",
-                                "05")
-    expect(trade.size).to eq 1
-    expect(trade[0][:id]).to eq 1
-    expect(trade[0][:status]).to eq "ENCONTRADO"
-
-  end
-
-  it  'not find setup' do
-    ticks = DailyQuotation.all
-    expect(ticks.count).to eq 3
-
-    trade = Backtest.verify(  ticks,
-                                0,
-                                {:id => "2"},
-                                1,
-                                Date.new(2012,3,11),
-                                2000,
-                                6000,
-                                "ao_atingir",
-                                "0.01",
-                                "acima",
-                                "high",
-                                "1",
-                                "0.01",
-                                "abaixo",
-                                "low",
-                                "1",
-                                "6",
-                                "70",
-                                "05")
-    expect(trade).to eq nil
-  end
-
-  it  'find_setup Harami de Alta with 1 candle after'  do
-    ticks = DailyQuotation.all
-    expect(ticks.count).to eq 3
-
-    retorno = Backtest.find(ticks, 0, 1, '5')
-
-    expect(retorno[:find]).to eq true
-    expect(retorno[:candles_on_setup].count).to eq 2
-    expect(retorno[:candles_after_setup].count).to eq 1
-  end
-
-  it  'find_setup Harami de Alta without candles after'  do
-    ticks = DailyQuotation.find(1,2)
-    expect(ticks.count).to eq 2
-
-    retorno = Backtest.find(ticks, 0, 1, '5')
-
-    expect(retorno[:find]).to eq false
-    expect(retorno[:candles_on_setup].count).to eq 0
-    expect(retorno[:candles_after_setup].count).to eq 0
-  end
-
-
-  it 'validate relation setup Harami de Alta' do
-    candles = []
-    candles << {:date_quotation => '2000-01-13',
-                          :open => 112.5,
-                          :close => 106.5,
-                          :low => 106,
-                          :high => 112.5  }
-    candles << {:date_quotation => '2000-01-14',
-                          :open => 107.5,
-                          :close => 108,
-                          :low => 106,
-                          :high => 110.5  }
-
-    ret = Backtest.validate_relation(candles, 1)
-    expect(ret).to eq true
-  end
-
-
-  it 'dont validate relation setup Harami de Alta' do
-    candles = []
-    candles << {:date_quotation => '2000-01-13',
-                          :open => 112.5,
-                          :close => 106.5,
-                          :low => 106,
-                          :high => 112.5  }
-    candles << {:date_quotation => '2000-01-14',
-                          :open => 100.5,
-                          :close => 108,
-                          :low => 106,
-                          :high => 110.5  }
-
-    ret = Backtest.validate_relation(candles, 1)
-    expect(ret).to eq false
   end
 
 end
