@@ -77,64 +77,8 @@ describe Backtest, :type => :model do
 
   end
 
-  it "identifica_valor_ponto_de_entrada" do
-    #identifica_valor_ponto_de_entrada(pe1_valor, pe1_acima_abaixo, pe1_ponto_do_candle, pe1_lista_de_candles, candles)
-    candles_do_padrao = []
-    candles_do_padrao << {:date_quotation => '2000-01-13',
-                          :open => 112.5,
-                          :close => 106.5,
-                          :low => 106,
-                          :high => 112.5,
-                          :valor_ifr => 0,
-                          :valor_media => 0  }
-    candles_do_padrao << {:date_quotation => '2000-01-14',
-                          :open => 107.5,
-                          :close => 108,
-                          :low => 106,
-                          :high => 110.5,
-                          :valor_ifr => 0,
-                          :valor_media => 0  }
-    candles_do_padrao << {:date_quotation => '2000-01-15',
-                          :open => 12.5,
-                          :close => 10,
-                          :low => 11,
-                          :high => 11.5,
-                          :valor_ifr => 0,
-                          :valor_media => 0  }
 
-    valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','high','2', candles_do_padrao)
-    expect(valor_de_entrada).to eq 110.51
 
-    valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','low','2', candles_do_padrao)
-    expect(valor_de_entrada).to eq 106.01
-
-    valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','close','2', candles_do_padrao)
-    expect(valor_de_entrada).to eq 108.01
-
-    valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','open','2', candles_do_padrao)
-    expect(valor_de_entrada).to eq 107.51
-
-    valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'acima','high','1', candles_do_padrao)
-    expect(valor_de_entrada).to eq 112.51
-
-    valor_de_entrada = Backtest.identifica_valor_ponto_de_entrada(0.01,'abaixo','high','3', candles_do_padrao)
-    expect(valor_de_entrada).to eq 11.49
-
-  end
-
-  it "carrega_lista_ponto_do_candle" do
-    #[['da maxima','high'], ['da minima','low'], ['da abertura','open'], ['do fechamento','close']]
-    ponto_do_candle = Backtest.carrega_lista_ponto_do_candle
-    expect(ponto_do_candle).to be
-    expect(ponto_do_candle[0][0]).to eq 'da maxima'
-    expect(ponto_do_candle[1][0]).to eq 'da minima'
-    expect(ponto_do_candle[2][0]).to eq 'da abertura'
-    expect(ponto_do_candle[3][0]).to eq 'do fechamento'
-    expect(ponto_do_candle[0][1]).to eq 'high'
-    expect(ponto_do_candle[1][1]).to eq 'low'
-    expect(ponto_do_candle[2][1]).to eq 'open'
-    expect(ponto_do_candle[3][1]).to eq 'close'
-  end
 
   it  "carrega_lista_acima_abaixo" do
     ret = Backtest.carrega_lista_acima_abaixo
