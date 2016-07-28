@@ -21,9 +21,9 @@
 						<% if trade[:valor_resultado].to_f > 0.00 %>
 					  	<div class='striptrade_green' id='none'>Resultado: <%= number_to_currency(trade[:valor_resultado]) %></div>
 					  	<div class='striptrade_green' id='none'>
-								% Sobre Investimento: <%= number_to_currency(trade[:perc_resultado]) %>%
-							</div>
-						<% elsif trade[:valor_resultado].to_f == 0.00 %>
+							% Sobre Investimento: <%= number_to_currency(trade[:perc_resultado]) %>%
+						</div>
+						<% elsif trade[:valor_resultado].to_f == 00.00 %>
 					  	<div class='striptrade_yellow' id='none'>Resultado: <%= number_to_currency(trade[:valor_resultado]) %> </div>
 						<% else %>
 					  	<div class='striptrade_red' id='none'>Resultado: <%= number_to_currency(trade[:valor_resultado]) %></div>
