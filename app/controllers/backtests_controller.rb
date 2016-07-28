@@ -3,7 +3,7 @@ class BacktestsController < ApplicationController
   include ActionView::Helpers::NumberHelper
 
   def backtest
-    @datainicial = Date.new(2000,1,1)
+    @datainicial = Date.new(2000,1,01)
     @datafinal = Date.current
 
     session[:qtd_candles] = nil
