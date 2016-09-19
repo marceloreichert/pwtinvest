@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
-ruby '2.1.2'
+ruby '2.3.1'
 
-gem 'rails', '4.1.6'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '4.2.5'
 
 gem 'newrelic_rpm'
 gem 'responders'
@@ -33,9 +34,6 @@ group :development, :test do
   gem 'pry', :require => false
   gem 'thin'
   gem 'rake'
-end
-
-group :development, :test do
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'capybara'

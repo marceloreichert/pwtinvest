@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20111114013634) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "daily_quotations", force: true do |t|
+  create_table "daily_quotations", force: :cascade do |t|
     t.string   "paper",          limit: 10
     t.date     "date_quotation"
     t.decimal  "open",                      precision: 13, scale: 2
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20111114013634) do
     t.datetime "updated_at"
   end
 
-  create_table "papers", force: true do |t|
+  create_table "papers", force: :cascade do |t|
     t.string   "symbol"
     t.string   "description"
     t.integer  "nr_lote"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20111114013634) do
     t.datetime "updated_at"
   end
 
-  create_table "setup_candles", force: true do |t|
+  create_table "setup_candles", force: :cascade do |t|
     t.integer  "setup_id"
     t.string   "type_candle"
     t.string   "candle_position"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20111114013634) do
     t.datetime "updated_at"
   end
 
-  create_table "setup_rels", force: true do |t|
+  create_table "setup_rels", force: :cascade do |t|
     t.integer  "setup_id"
     t.string   "candle_x_value"
     t.string   "candle_x_position"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20111114013634) do
     t.datetime "updated_at"
   end
 
-  create_table "setups", force: true do |t|
+  create_table "setups", force: :cascade do |t|
     t.string   "setup"
     t.string   "description"
     t.integer  "quantity_candle"
@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 20111114013634) do
     t.string   "third_candle_type",  limit: 20
   end
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "email",                             default: "", null: false
     t.string   "encrypted_password",                default: "", null: false
     t.string   "reset_password_token"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20111114013634) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
-  create_table "weekly_quotations", force: true do |t|
+  create_table "weekly_quotations", force: :cascade do |t|
     t.string   "paper",          limit: 10
     t.date     "date_quotation"
     t.decimal  "open",                      precision: 13, scale: 2
