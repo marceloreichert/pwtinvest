@@ -26,17 +26,17 @@ class Validate
   #         second candle
   #         third candle
   ###########################
-  def self.validate(candles, setup_found, i1, i2, i3, i4, i5 )
+  def self.validate(ticks, setup_found, i1, i2, i3, i4, i5 )
 
     setup_validado  = []
 
     setup_found.each  do |setup_index|
 
-      candle = candle_i5(candles, setup_index, i5)
+      candle = candle_i5(ticks, setup_index, i5.to_i)
 
       value_for_validate = point_for_validate(i2, i3, i4, candle )
 
-      candle_after_setup = candles.at( setup_index.size)
+      candle_after_setup = ticks.at( setup_index.size)
 
       i1 == "ao_atingir" ? value = candle_after_setup[:high] : value = candle_after_setup[:close]
 
@@ -60,7 +60,7 @@ class Validate
         status = "VALIDADO"
         historico = ""
       end
-
+binding.pry
       #--Valor a ser comprado, mais o valor de compras em aberto nao pode ser maior
       #--que o valor maximo cadastrado de perda (6% ou R$6.000,00 => base R$100.000,00)
       if perda_geral_enabled && status.nil?
@@ -163,8 +163,8 @@ class Validate
   #         second candle
   #         third candle
   ###########################
-  def self.candle_i5(candles, setup_found_index, i5)
-    candles.at(setup_found_index[i5 - 1])
+  def self.candle_i5(ticks, setup_found_index, i5)
+    ticks.at(setup_found_index[i5 - 1])
   end
 
   ################################################################

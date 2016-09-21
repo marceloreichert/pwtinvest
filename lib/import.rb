@@ -1,6 +1,5 @@
-module Backtest
-  class Import
-
+module Import
+  
     def self.day(paper)
 
       quote = DailyQuotation.where("paper = ?", Paper.busca_papel(paper).symbol).order("date_quotation ASC").last
@@ -106,5 +105,4 @@ module Backtest
         end
       end
     end
-  end
 end

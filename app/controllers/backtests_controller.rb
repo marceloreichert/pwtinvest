@@ -31,18 +31,20 @@ class BacktestsController < ApplicationController
     date_end = Date.new(params[:datafinal][:year].to_i, params[:datafinal][:month].to_i, params[:datafinal][:day].to_i)
 
     if params[:prazo].downcase == 'diario'
-      Import.import_day(params[:paper][:id])
+      Import.day(params[:paper][:id])
       @ticks = DailyQuotation.where("paper = ? and date_quotation between ? and ?", Paper.busca_papel(params[:paper][:id]).symbol, date_ini, date_end).order("date_quotation ASC")
 
     elsif params[:prazo].downcase == 'semanal'
-      Import.import_week(params[:paper][:id])
+      Import.week(params[:paper][:id])
       @ticks = WeeklyQuotation.find_all_by_paper(Paper.busca_papel(params[:paper][:id]).symbol, :conditions => ["date_quotation between ? and ?", date_ini, date_end], :order => "date_quotation ASC")
     end
 
     if not @ticks.nil?
-      ticks_filtered  = Validate.validate(@ticks, params[:setup][:id])
-
-      ticks_filtered  = Relation.relation(ticks_filtered, params[:setup][:id])
+      ticks_finder    = Finder.find(@ticks, params[:setup][:id])
+      require 'pry'
+      binding.pry;
+      ticks_validate  = Validate.validate(@ticks, ticks_finder, params[:pe1_ponto_de_entrada], params[:pe1_valor], params[:pe1_acima_abaixo], params[:pe1_ponto_do_candle], params[:pe1_qual_candle])
+#      ticks_filtered  = Relation.relation(ticks_filtered, params[:setup][:id])
 
 
       @ret = Backtest.backtest(     @ticks,
