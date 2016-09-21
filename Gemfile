@@ -1,10 +1,8 @@
 source 'http://rubygems.org'
 ruby '2.3.1'
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.5'
+gem 'rails', '5.0.0.1'
 
-gem 'newrelic_rpm'
 gem 'responders'
 
 gem 'uglifier'
@@ -15,15 +13,10 @@ gem 'will_paginate'
 gem 'nokogiri'
 gem 'simple_form'
 gem 'yahoofinance'
-gem 'cancan'
+gem 'cancancan'
 gem 'pg'
 
 gem 'coveralls', require: false
-
-gem 'protected_attributes'
-gem 'rails-observers'
-gem 'actionpack-page_caching'
-gem 'actionpack-action_caching'
 
 gem 'unicorn'
 gem 'rails_12factor'
@@ -33,7 +26,6 @@ group :development, :test do
   gem 'awesome_print', :require => false
   gem 'pry', :require => false
   gem 'thin'
-  gem 'rake'
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'capybara'
