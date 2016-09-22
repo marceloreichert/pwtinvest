@@ -1,0 +1,8 @@
+<div class='title_tools'>
+  <%%= link_to(t('<%= singular_name %>.index'), <%= plural_name %>_path) %>
+  <%%= ' | ' %>
+	<%%= link_to(t('<%= singular_name %>.new'), new_<%= singular_name %>_path)%>
+</div>
+
+<div class='title'> <%%= t('<%= singular_name %>.edit') %> </div>
+<%%= render :partial => "form", :locals => {:f => f} %>

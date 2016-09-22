@@ -1,0 +1,12 @@
+<div id='tabs'>
+  <ul>
+		<li><%= link_to(t("menu.home"), root_path, :class => "active" ? "" : "") %></li>
+		<% if user_signed_in?  %>
+			<li><%= link_to(t("menu.setup"), setups_path, :class => "active" ? "" : "") %></li>
+			<li><%= link_to(t("menu.info"), edit_user_registration_path, :class => "active" ? "" : "") %></li>
+			<% if current_user.fl_admin? %>
+				<li><%= link_to(t("menu.candle"), candles_path, :class => "active" ? "" : "") %></li>
+			<% end %>
+		<% end %>
+	</ul>
+</div>

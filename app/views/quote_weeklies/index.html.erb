@@ -1,0 +1,34 @@
+<h1>Listing quote_weeklies</h1>
+
+<table>
+  <tr>
+    <th>Papel</th>
+    <th>Data</th>
+    <th>Valor abertura</th>
+    <th>Valor fechamento</th>
+    <th>Valor minima</th>
+    <th>Valor maxima</th>
+    <th>Volume</th>
+    <th>Ajuste fechamento</th>
+  </tr>
+
+<% @quote_weeklies.each do |quote_weekly| %>
+  <tr>
+    <td><%=h quote_weekly.papel %></td>
+    <td><%=h quote_weekly.data %></td>
+    <td><%=h quote_weekly.valor_abertura %></td>
+    <td><%=h quote_weekly.valor_fechamento %></td>
+    <td><%=h quote_weekly.valor_minima %></td>
+    <td><%=h quote_weekly.valor_maxima %></td>
+    <td><%=h quote_weekly.volume %></td>
+    <td><%=h quote_weekly.ajuste_fechamento %></td>
+    <td><%= link_to 'Show', quote_weekly %></td>
+    <td><%= link_to 'Edit', edit_quote_weekly_path(quote_weekly) %></td>
+    <td><%= link_to 'Destroy', quote_weekly, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New quote_weekly', new_quote_weekly_path %>

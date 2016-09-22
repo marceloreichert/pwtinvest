@@ -1,0 +1,44 @@
+<h1>Editing quote_weekly</h1>
+
+<% form_for(@quote_weekly) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :papel %><br />
+    <%= f.text_field :papel %>
+  </p>
+  <p>
+    <%= f.label :data %><br />
+    <%= f.date_select :data %>
+  </p>
+  <p>
+    <%= f.label :valor_abertura %><br />
+    <%= f.text_field :valor_abertura %>
+  </p>
+  <p>
+    <%= f.label :valor_fechamento %><br />
+    <%= f.text_field :valor_fechamento %>
+  </p>
+  <p>
+    <%= f.label :valor_minima %><br />
+    <%= f.text_field :valor_minima %>
+  </p>
+  <p>
+    <%= f.label :valor_maxima %><br />
+    <%= f.text_field :valor_maxima %>
+  </p>
+  <p>
+    <%= f.label :volume %><br />
+    <%= f.text_field :volume %>
+  </p>
+  <p>
+    <%= f.label :ajuste_fechamento %><br />
+    <%= f.text_field :ajuste_fechamento %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @quote_weekly %> |
+<%= link_to 'Back', quote_weeklies_path %>
