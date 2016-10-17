@@ -143,7 +143,7 @@ module Backtest
 
               historico = "Candle do dia "
               historico << cot.date_quotation.strftime("%d/%m/%Y")
-              historico << " atingiu o Ponto de Stop Loss em "
+              historico << " atingiu o Ponto de Stop em "
               historico << number_to_currency(t[:valor_ponto_stop]) + ". "
               historico << "Vendidos " + t[:lotes_a_vender].to_s + " lotes com retorno de "
               historico << number_to_currency(valor_total_venda)
@@ -237,7 +237,7 @@ module Backtest
 
               @extrato << Backtest.insere_lancamentos_no_extrato(cot.date_quotation, valor_saida, "V", t[:id], @saldo, risco_do_trade, @risco_acumulado)
 
-              historico = "Ponto de Saida ou Stop Loss nao atingidos. "
+              historico = "Ponto de Saida ou Ponto de Stop nao atingidos. "
               historico << "Vendidos " + t[:lotes_a_vender].to_s + " lotes "
               historico << "no fechamento do ultimo candle do trade, "
               historico << "no dia "
@@ -785,7 +785,8 @@ module Backtest
             valor_lote_minimo = trade[:valor_ponto_compra] * nr_lote_minimo
 
             status = "VALIDADO/NAO COMPRADO"
-            historico = "Nao existe saldo suficiente para comprar lote. Saldo atual e de " + number_to_currency(@saldo)
+            historico = "Nao existe saldo suficiente para comprar lote. "
+	historico << "Saldo atual e de " + number_to_currency(@saldo)
             historico << " e valor do lote minimo e de " + number_to_currency(valor_lote_minimo) + "."
           end
         end
@@ -1221,23 +1222,23 @@ module Backtest
   end
 
   def carrega_lista_ponto_do_candle
-    ponto_do_candle = [['da maxima','high'], ['da minima','low'], ['da abertura','open'], ['do fechamento','close']]
+    [['da maxima','high'], ['da minima','low'], ['da abertura','open'], ['do fechamento','close']]
   end
 
   def carrega_lista_ponto_do_candle2
-    ponto_do_candle = [['da minima','low'], ['da maxima','high'], ['da abertura','open'], ['do fechamento','close']]
+    [['da minima','low'], ['da maxima','high'], ['da abertura','open'], ['do fechamento','close']]
   end
 
   def carrega_lista_acima_abaixo
-    ret = [['acima','acima'],['abaixo','abaixo']]
+    [['acima','acima'],['abaixo','abaixo']]
   end
 
   def carrega_lista_abaixo_acima
-    ret = [['abaixo','abaixo'],['acima','acima']]
+    [['abaixo','abaixo'],['acima','acima']]
   end
 
   def carrega_lista_ponto_de_entrada
-    ret = [['Ao atingir','ao_atingir'],['Ao fechar','ao_fechar']]
+    [['Ao atingir','ao_atingir'],['Ao fechar','ao_fechar']]
   end
 
 end
