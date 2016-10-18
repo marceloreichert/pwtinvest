@@ -1,27 +1,25 @@
-<div id='header'>
-  <div id='welcome'>
+<header class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="navbar-inner">
+    <div class="container">
+      <div class="navbar-header">
+        <%= link_to(t("corporation"), root_path, class: "navbar-brand") %>
+      </div>
 
-		<% if user_signed_in?  %>
-			<% if current_user.full_name.present? %>
-				<span><%= current_user.full_name %> </span>
-			<% else %>
-				<span><%= current_user.email %> </span>
-			<% end %>
-			<% if current_user.fl_admin? %>
-			  (ADMIN)
-			<% end %>
+      <% unless user_signed_in? %>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <a>
+              <strong>Demonstração</strong>
+              <strong>
+              </strong>
+            </a>
+          </li>
 
-			<span>&nbsp;&nbsp;</span>
+          <%= render "layouts/menu" %>
 
-	    <%= link_to(t("comum.about"), "#")  << " |" %>
-			<%= link_to(t("comum.logout"), destroy_user_session_path) %>
-
-		<% else %>
-
-		<% end %>
-	</div>
-
-	<h3>
-    <%= link_to(t('comum.app'), root_path) %>
-	</h3>
-</div>
+          <li class='active'><%= link_to t("logout", default: "Logout"), destroy_user_session_path, method: :delete %></li>
+        </ul>
+      <% end %>
+    </div>
+  </div>
+</header>

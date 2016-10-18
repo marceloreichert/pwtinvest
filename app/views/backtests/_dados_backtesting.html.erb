@@ -51,7 +51,7 @@
 			<%= params[:pe1_ponto_de_entrada].humanize %>
 			<%= number_to_currency(params[:pe1_valor]) %>
 			<%= params[:pe1_acima_abaixo] %>
-			<%= Backtest.carrega_lista_ponto_do_candle.rassoc(params[:pe1_ponto_do_candle])[0] %>
+			<%= Backtest.carrega_lista_ponto_do_candle2.rassoc(params[:pe1_ponto_do_candle])[0] %>
 			do
 			<%= Setup.carrega_lista_de_candles_do_setup(params[:setup][:id]).rassoc(params[:pe1_qual_candle].to_i)[0] %>
 			candle do padrão.
@@ -65,7 +65,7 @@
 			Ao atingir
 			<%= number_to_currency(params[:ponto_stop_valor]) %>
 			<%= params[:ponto_stop_acima_abaixo] %>
-			<%= Backtest.carrega_lista_ponto_do_candle.rassoc(params[:ponto_stop_ponto_do_candle])[0] %>
+			<%= Backtest.carrega_lista_ponto_do_candle2.rassoc(params[:ponto_stop_ponto_do_candle])[0] %>
 			do
 			<% if params[:ponto_stop_lista_de_candles] == '1' %>
 				<%= 'primeiro' %>

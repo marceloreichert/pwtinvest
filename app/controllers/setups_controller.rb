@@ -56,4 +56,10 @@ class SetupsController < ApplicationController
     @setup.destroy
     respond_with(@setup)
   end
+
+  private
+    def setup_params
+      params.require(:setup).permit(:id, :setup, :quantity_candle, :description, :first_candle, :second_candle, :third_candle, :first_candle_type, :second_candle_type, :third_candle_type)
+    end
+
 end

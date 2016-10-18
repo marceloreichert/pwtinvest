@@ -14,13 +14,12 @@
 <div class='subtitle'>
   <span> <%= "Resultados por Cada Trade Efetuado" %> </span>
 </div>
+
 <div class='list'>
 	<div id='tickets'>
-  <% unless @trade_results.empty? %>
-    <%= render "backtest_resultado_trade", :collection => @trade_results %>
-  <% else %>
-    <%= render "common/empty" %>
-	<% end %>
+	  <% unless @trade_results.empty? %>
+  	  <%= render "backtest_resultado_trade", :collection => @trade_results %>
+		<% end %>
 	</div>
 </div>
 			

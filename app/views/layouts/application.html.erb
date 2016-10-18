@@ -1,31 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang='en' lang='en'>
-	<head>
-	  <title><%=t('comum.app')%> - PowerTask</title>
-		<%= stylesheet_link_tag "application" %>
-		<%= yield :styles %>
+<html>
+  <head>
+    <title>pwtINVEST</title>
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+  </head>
 
-		<%= javascript_include_tag "application" %>
-		<%= csrf_meta_tags %>
-	</head>
+  <body>
 
-	<body>
-		<header class="navbar navbar-default navbar-fixed-top" role="navigation">
-		  <div class="navbar-inner">
-		    <div class="container">
-					<div class="navbar-header">
-						<%= link_to(t('comum.app'), root_path, class: "navbar-brand") %>
-		      </div>
-					<ul class="nav navbar-nav">
-						<li><%= link_to("Home", root_path) %></li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<li class='active'><%= link_to t("logout", default: "Logout"), destroy_user_session_path, method: :delete %></li>
-					</ul>
-		    </div>
-		  </div>
-		</header>
+      <%= render 'layouts/header' %>
+      <%= render "layouts/tabbed" %>
 
-    <%= render "layouts/tabbed" %>
-	</body>
+  </body>
+
 </html>

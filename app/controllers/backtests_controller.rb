@@ -40,10 +40,8 @@ class BacktestsController < ApplicationController
     end
 
     if not @ticks.nil?
-      ticks_finder    = Finder.find(@ticks, params[:setup][:id])
-      require 'pry'
-      binding.pry;
-      ticks_validate  = Validate.validate(@ticks, ticks_finder, params[:pe1_ponto_de_entrada], params[:pe1_valor], params[:pe1_acima_abaixo], params[:pe1_ponto_do_candle], params[:pe1_qual_candle])
+#      ticks_finder    = Finder.find(@ticks, params[:setup][:id])
+#      ticks_validate  = Validate.validate(@ticks, ticks_finder, params[:pe1_ponto_de_entrada], params[:pe1_valor], params[:pe1_acima_abaixo], params[:pe1_ponto_do_candle], params[:pe1_qual_candle])
 #      ticks_filtered  = Relation.relation(ticks_filtered, params[:setup][:id])
 
 

@@ -1,7 +1,6 @@
 class Setup < ActiveRecord::Base
   has_many :setup_rels, :dependent => :delete_all
 
-  attr_accessible :id, :setup, :quantity_candle, :description, :first_candle, :second_candle, :third_candle, :first_candle_type, :second_candle_type, :third_candle_type
 
   validates_presence_of :setup
   validates_presence_of :description

@@ -27,7 +27,7 @@ class Relation
         end
 
 
-        t = ticks.at(tick[candle_x_position - 1])
+        t = ticks[tick[candle_x_position - 1]]
 
         if relation.candle_x_value == 'abertura'
           candle_x_value = t[:open]
@@ -39,7 +39,7 @@ class Relation
           candle_x_value = t[:low]
         end
 
-        t = ticks.at(tick[candle_y_position - 1])
+        t = ticks[tick[candle_y_position - 1]]
 
         if relation.candle_y_value == 'abertura'
           candle_y_value = t[:open]

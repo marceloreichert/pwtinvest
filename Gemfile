@@ -6,7 +6,8 @@ gem 'rails', '5.0.0.1'
 gem 'responders'
 
 gem 'uglifier'
-gem 'sass-rails', '4.0.3'
+gem 'sass-rails'
+gem 'coffee-rails', '~> 4.1.0'
 
 gem 'devise'
 gem 'will_paginate'
@@ -20,7 +21,11 @@ gem 'coveralls', require: false
 
 gem 'unicorn'
 gem 'rails_12factor'
+
 gem 'jquery-rails'
+gem 'jbuilder', '~> 1.2'
+gem 'jquery-turbolinks'
+
 
 group :development, :test do
   gem 'awesome_print', :require => false

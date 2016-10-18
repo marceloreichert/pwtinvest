@@ -36,7 +36,7 @@ module Backtest
 #    valor_ponto_de_stop = Backtest.identifica_valor_ponto_de_stop(pstop1, pstop2, pstop3, pstop4, ret[:candles_on_setup])
 #    valor_ponto_de_saida = Backtest.identifica_valor_ponto_de_saida(valor_ponto_de_entrada, ps1)
 #    dados_do_proximo_candle_apos_padrao = Backtest.identifica_dados_do_proximo_candle_apos_padrao(ret[:candles_after_setup], pe1_ponto_de_entrada, quantidade_candles_do_padrao)
-
+require 'pry'
     @list  = []
 
     tick_verified = []
@@ -48,13 +48,12 @@ module Backtest
 
     @list   << insert_list( nil, 0.00, "I", nil, @saldo, 0.00, 0.00)
     indice  = 0
-
-    @ticks.each do |tick|
+binding.pry;
+    ticks.each do |tick|
 
       tick_verified.each do |t|
 
         if t[:status] == "ENCONTRADO"
-
 
           if retorno[:status] != nil
             t[:valor_ponto_zerar_risco] = retorno[:valor_ponto_zerar_risco]

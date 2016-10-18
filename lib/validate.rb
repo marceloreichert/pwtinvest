@@ -36,7 +36,7 @@ class Validate
 
       value_for_validate = point_for_validate(i2, i3, i4, candle )
 
-      candle_after_setup = ticks.at( setup_index.size)
+      candle_after_setup = ticks[setup_index[setup_index.size - 1] + 1]
 
       i1 == "ao_atingir" ? value = candle_after_setup[:high] : value = candle_after_setup[:close]
 
@@ -60,9 +60,11 @@ class Validate
         status = "VALIDADO"
         historico = ""
       end
-binding.pry
+
       #--Valor a ser comprado, mais o valor de compras em aberto nao pode ser maior
       #--que o valor maximo cadastrado de perda (6% ou R$6.000,00 => base R$100.000,00)
+      perda_geral_enabled = true
+      
       if perda_geral_enabled && status.nil?
         if @risco_acumulado + risco_do_trade > valor_perda_geral
           status = "VALIDADO/NAO COMPRADO"
@@ -164,7 +166,7 @@ binding.pry
   #         third candle
   ###########################
   def self.candle_i5(ticks, setup_found_index, i5)
-    ticks.at(setup_found_index[i5 - 1])
+    ticks[setup_found_index[i5 - 1]]
   end
 
   ################################################################
