@@ -404,7 +404,7 @@ module Backtest
 
       (1..periodos).each do |periodo|
 
-        cot = cotacoes.at(indice + (periodo - 1))
+        cot = cotacoes[(indice + (periodo - 1))]
 
         if not cot.nil?
           valor_total = valor_total + cot[:valor_fechamento]
@@ -501,7 +501,7 @@ module Backtest
 
       (1..periodos).each do |periodo|
 
-        cot = cotacoes.at(indice + (periodo - 1))
+        cot = cotacoes[(indice + (periodo - 1))]
 
         if not cot.nil?
           if cot.tipo_candle == "A"
@@ -643,7 +643,7 @@ module Backtest
     valor_ponto_de_saida = identifica_valor_ponto_de_saida(valor_ponto_de_entrada, ps1)
     dados_do_proximo_candle_apos_padrao = identifica_dados_do_proximo_candle_apos_padrao(retorno[:candles_apos_padrao], pe1_ponto_de_entrada, quantidade_candles_do_padrao)
 
-    cot1 = cotacoes.at(indice)
+    cot1 = cotacoes[(indice)]
 
     trade = {   :id => id_do_padrao,
                 :status => "ENCONTRADO",
@@ -749,7 +749,7 @@ module Backtest
       #--Valor a ser comprado, mais o valor de compras em aberto nao pode ser maior
       #--que o valor maximo cadastrado de perda (6% ou R$6.000,00 => base R$100.000,00)
       if perda_geral_enabled && status.nil?
-        if @risco_acumulado + risco_do_trade > valor_perda_geral
+        if @risco_acumulado.to_f + risco_do_trade.to_f > valor_perda_geral.to_f
           status = "VALIDADO/NAO COMPRADO"
           historico = "Risco geral ultrapassou o maximo permitido de " + number_to_currency(valor_perda_geral) + "."
         else
@@ -757,7 +757,7 @@ module Backtest
           lotes_comprados = lotes_comprados / nr_lote_minimo
           lotes_comprados = nr_lote_minimo * lotes_comprados
 
-          valor_total_compra = trade[:valor_ponto_compra] * lotes_comprados
+          valor_total_compra = trade[:valor_ponto_compra].to_f * lotes_comprados
           valor_total_compra = valor_total_compra + valor_corretagem.to_f
 
           risco_do_trade = valor_total_compra - (lotes_comprados * trade[:valor_ponto_stop].to_f)
@@ -771,7 +771,7 @@ module Backtest
 
       #--Valor a ser comprado nao pode ser maior que saldo da c/c
       if status.nil?
-        if valor_total_compra > @saldo
+        if valor_total_compra.to_f > @saldo.to_f
           lotes_comprados = (@saldo - valor_corretagem.to_f) / trade[:valor_ponto_compra]
           lotes_comprados = lotes_comprados / nr_lote_minimo
           lotes_comprados = nr_lote_minimo * lotes_comprados.to_i
@@ -1035,7 +1035,7 @@ module Backtest
 
       setup_candle_tipo = "" if setup_candle_tipo.nil?
 
-      cot = cotacoes.at(indice + (index - 1))
+      cot = cotacoes[(indice + (index - 1))]
 
       if cot.nil?
         encontrei = false
@@ -1087,7 +1087,7 @@ module Backtest
       pos_final = pos_inicial + (quantidade_maxima_candles_do_trade.to_i - 1)
 
       (pos_inicial..pos_final).each  do |position_candle|
-        cot = cotacoes.at(indice + (position_candle - 1))
+        cot = cotacoes[(indice + (position_candle - 1))]
 
         if cot.nil?
           encontrei = false

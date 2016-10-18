@@ -1,6 +1,7 @@
 class Setup < ActiveRecord::Base
   has_many :setup_rels, :dependent => :delete_all
 
+  #attr_accessible :id, :setup, :quantity_candle, :description, :first_candle, :second_candle, :third_candle, :first_candle_type, :second_candle_type, :third_candle_type
 
   validates_presence_of :setup
   validates_presence_of :description
@@ -11,12 +12,12 @@ class Setup < ActiveRecord::Base
   cattr_reader :per_page
   @@per_page = 10
 
-  def self.load(id_do_setup)
+  def self.busca_setup(id_do_setup)
     return Setup.find(id_do_setup)
   end
 
-  def self.identifica_quantidade_candles_do_padrao(id)
-    Setup.load(id).quantity_candle
+  def self.identifica_quantidade_candles_do_padrao(id_do_setup)
+    Setup.busca_setup(id_do_setup).quantity_candle
   end
 
   def self.carrega_lista_de_candles_do_setup(id_do_setup)
@@ -55,12 +56,10 @@ class Setup < ActiveRecord::Base
     str_xml = nil
 
     cotacoes.each do |cot|
-#      retorno = Backtest.find(cotacoes, indice, setup_id, 4)
-      setup_found = Finder.Find(cotacoes, setup_id)
-      retorno = Relation.relation(cotacoes, setup_found, setup_id)
-      
+      retorno = Backtest.encontrar_padroes_de_candles_do_setup(cotacoes, indice, setup_id, 4)
+
       if retorno[:encontrei]
-        if Backtest.validate_relation(retorno[:candles_do_padrao], setup_id)
+        if Backtest.valida_relacao_entre_candles(retorno[:candles_do_padrao], setup_id)
           str_xml = Backtest.gera_xml_do_grafico(retorno, 'Exemplo', quantidade_candles)
           return str_xml
         end
