@@ -3,7 +3,7 @@ class BacktestsController < ApplicationController
   include ActionView::Helpers::NumberHelper
 
   def backtest
-    @datainicial = Date.new(2000,1,01)
+    @datainicial = Date.new(2000,1,1)
     @datafinal = Date.current
 
     session[:qtd_candles] = nil
@@ -27,36 +27,73 @@ class BacktestsController < ApplicationController
 
     ultima_data = Date.new(2000, 1, 1)
 
-    date_ini = Date.new(params[:datainicial][:year].to_i, params[:datainicial][:month].to_i, params[:datainicial][:day].to_i)
-    date_end = Date.new(params[:datafinal][:year].to_i, params[:datafinal][:month].to_i, params[:datafinal][:day].to_i)
+    data_inicial = Date.new(params[:datainicial][:year].to_i, params[:datainicial][:month].to_i, params[:datainicial][:day].to_i)
+    data_final = Date.new(params[:datafinal][:year].to_i, params[:datafinal][:month].to_i, params[:datafinal][:day].to_i)
 
     if params[:prazo].downcase == 'diario'
-      Import.day(params[:paper][:id])
-      @ticks = DailyQuotation.where("paper = ? and date_quotation between ? and ?", Paper.busca_papel(params[:paper][:id]).symbol, date_ini, date_end).order("date_quotation ASC")
+      Import.importar_diario(params[:paper][:id])
+      @cotacoes = DailyQuotation.where("paper = ? and date_quotation between ? and ?", Paper.busca_papel(params[:paper][:id]).symbol, data_inicial, data_final).order("date_quotation ASC")
 
     elsif params[:prazo].downcase == 'semanal'
-      Import.week(params[:paper][:id])
-      @ticks = WeeklyQuotation.find_all_by_paper(Paper.busca_papel(params[:paper][:id]).symbol, :conditions => ["date_quotation between ? and ?", date_ini, date_end], :order => "date_quotation ASC")
+      Import.importar_semanal(params[:paper][:id])
+      @cotacoes = WeeklyQuotation.find_all_by_paper(Paper.busca_papel(params[:paper][:id]).symbol, :conditions => ["date_quotation between ? and ?", data_inicial, data_final], :order => "date_quotation ASC")
     end
 
-    if not @ticks.nil?
-#      ticks_finder    = Finder.find(@ticks, params[:setup][:id])
-#      ticks_validate  = Validate.validate(@ticks, ticks_finder, params[:pe1_ponto_de_entrada], params[:pe1_valor], params[:pe1_acima_abaixo], params[:pe1_ponto_do_candle], params[:pe1_qual_candle])
-#      ticks_filtered  = Relation.relation(ticks_filtered, params[:setup][:id])
+    if not @cotacoes.nil?
+      @retorno = Backtest.backtest( @cotacoes,
+                                    data_inicial,
+                                    data_final,
+                                    params[:paper],
+                                    params[:setup],
 
+                                    params[:pe1_ponto_de_entrada],
+                                    params[:pe1_valor],
+                                    params[:pe1_acima_abaixo],
+                                    params[:pe1_ponto_do_candle],
+                                    params[:pe1_qual_candle],
 
-      @ret = Backtest.backtest(     @ticks,
+                                    params[:ponto_stop_valor],
+                                    params[:ponto_stop_acima_abaixo],
+                                    params[:ponto_stop_ponto_do_candle],
+                                    params[:ponto_stop_lista_de_candles],
+
+                                    params[:quantidade_maxima_candle_trade],
+
+                                    params[:ponto_saida_valor],
+
+                                    params[:perc_perda_trade],
+                                    params[:perc_perda_geral],
+                                    params[:valor_investimento],
+                                    params[:ponto_zerar_risco_percentual],
+                                    params[:prazo],
+                                    params[:valor_corretagem],
                                     false,
-                                    params )
+                                    params[:mm_periodos],
+                                    params[:mm_local],
+                                    params[:mm_tipo],
+                                    false,
+                                    params[:ifr_local],
+                                    params[:ifr_periodos],
+                                    params[:ifr_valor],
+                                    params[:perda_geral_enabled]
+                                    )
+      if not @retorno.nil?
+        @totais = @retorno[:totais]
+      end
 
-      @totais = @ret[:totais] if not @ret.nil?
+      @trade_results = @retorno[:trade]
 
-      @trade_results = @ret[:trade]
-
+      if params[:mm_enabled]
+        if params[:mm_tipo].downcase == 'simples'
+          @mm_descricao = 'MMA' + params[:mm_periodo].to_s
+        else
+          @mm_descricao = 'MME' + params[:mm_periodo].to_s
+        end
+      end
     end
 
     respond_to do |format|
-      format.html
+      format.html # index.html.erb
       format.xml
     end
   end
