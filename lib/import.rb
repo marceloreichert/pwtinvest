@@ -14,6 +14,7 @@ module Import
 
     @papel = ""
 
+
     YahooFinance::get_HistoricalQuotes( Paper.busca_papel(paper).symbol, ultima_data, Date.today() ) do |hq|
 
       if @papel.empty?
